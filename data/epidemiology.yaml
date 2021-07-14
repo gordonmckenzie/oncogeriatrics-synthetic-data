@@ -1,0 +1,1921 @@
+---
+- ll: 65
+  ul: 69
+  n: 3363000
+  cancerIncidence:
+    all: 53924
+    prostate:
+      m: 0.298
+      f: 0
+    breast:
+      m: 0
+      f: 0.341
+    lung:
+      m: 0.128
+      f: 0.132
+    bowel:
+      m: 0.121
+      f: 0.092
+    uterus:
+      m: 0
+      f: 0.067
+    ovary:
+      m: 0
+      f: 0.044
+    h&n:
+      m: 0.057
+      f: 0
+    renal:
+      m: 0.046
+      f: 0
+    other:
+      m: 0.35
+      f: 0.324
+  geriatricVulnerabilities:
+    mci:
+      m: 10.7
+      f: 10.7
+    dementia:
+      m: 1.5
+      f: 1.8
+    historyOfDelirium:
+      m: 1
+      f: 1
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 31.5
+      f: 31.5
+    frailty:
+      m: 5
+      f: 6
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 61.8
+      f: 28.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 0.9
+      f: 1.8
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 17.65
+      f: 27.86
+    diabetes:
+      m: 15.7
+      f: 10.4
+    heartDisease:
+      m: 11.4
+      f: 11.4
+    lungDisease:
+      m: 13
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 57
+      f: 53
+    arthritis:
+      m: 33.6
+      f: 49.1
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 10.08
+      f: 6.3
+    af:
+      m: 3.95
+      f: 3.95
+    stroke:
+      m: 7.1
+      f: 4.2
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 2.5
+      f: 1.5
+    hypertension:
+      m: 58
+      f: 51
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.74
+      f: 4.74
+    osteoporosis:
+      m: 7.4
+      f: 20.2
+    parkinsonsDisease:
+      m: 0.29
+      f: 0.19
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 11
+      f: 11.7
+    ulcers:
+      m: 2.11
+      f: 1.14
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.5
+      f: 24.5
+    polypharmacy:
+      m: 20.5
+      f: 20.5
+    sleepDisturbance:
+      m: 65
+      f: 65
+    faecalIncontinence:
+      m: 6.9
+      f: 5.8
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 4.8
+      f: 7.2
+    needsCare:
+      m: 15.8
+      f: 15.8
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 7.6
+      f: 9.1
+    mi:
+      m: 7.05
+      f: 2.06
+    angina:
+      m: 8.83
+      f: 4.66
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 1.14
+      f: 2.56
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.05
+      f: 0.3
+    liverDisease:
+      m: 3
+      f: 3
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 5
+      f: 10
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 34.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 49
+      f: 52
+    livesAlone:
+      m: 10
+      f: 9
+- ll: 70
+  ul: 74
+  n: 3369000
+  cancerIncidence:
+    all: 54561
+    prostate:
+      m: 0.298
+      f: 0
+    breast:
+      m: 0
+      f: 0.341
+    lung:
+      m: 0.128
+      f: 0.132
+    bowel:
+      m: 0.121
+      f: 0.092
+    uterus:
+      m: 0
+      f: 0.067
+    ovary:
+      m: 0
+      f: 0.044
+    h&n:
+      m: 0.057
+      f: 0
+    renal:
+      m: 0.046
+      f: 0
+    other:
+      m: 0.35
+      f: 0.324
+  geriatricVulnerabilities:
+    mci:
+      m: 11.9
+      f: 11.9
+    dementia:
+      m: 3.1
+      f: 3
+    historyOfDelirium:
+      m: 1
+      f: 1
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 12
+      f: 14
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 83
+      f: 54.6
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 1.4
+      f: 3.2
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 17.65
+      f: 27.86
+    diabetes:
+      m: 15.7
+      f: 10.4
+    heartDisease:
+      m: 11.4
+      f: 11.4
+    lungDisease:
+      m: 16.3
+      f: 15.1
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 57
+      f: 53
+    arthritis:
+      m: 37.3
+      f: 55.6
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 3.95
+      f: 3.95
+    stroke:
+      m: 7.1
+      f: 4.2
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 2.5
+      f: 1.5
+    hypertension:
+      m: 58
+      f: 51
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.74
+      f: 4.74
+    osteoporosis:
+      m: 7.8
+      f: 27.9
+    parkinsonsDisease:
+      m: 0.5
+      f: 0.33
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 14.04
+      f: 14.21
+    ulcers:
+      m: 2.11
+      f: 1.14
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.5
+      f: 24.5
+    polypharmacy:
+      m: 21.1
+      f: 21.1
+    sleepDisturbance:
+      m: 65
+      f: 65
+    faecalIncontinence:
+      m: 7.8
+      f: 7.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 4.8
+      f: 7.2
+    needsCare:
+      m: 18.8
+      f: 18.8
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 7.6
+      f: 9.1
+    mi:
+      m: 7.05
+      f: 2.06
+    angina:
+      m: 8.83
+      f: 4.66
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 1.14
+      f: 2.56
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.065
+      f: 0.27
+    liverDisease:
+      m: 3
+      f: 3
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 4
+      f: 9
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 10
+      f: 17
+- ll: 75
+  ul: 79
+  n: 2412000
+  cancerIncidence:
+    all: 50243
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 12.4
+      f: 12.4
+    dementia:
+      m: 5.3
+      f: 6.6
+    historyOfDelirium:
+      m: 1
+      f: 1
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 12
+      f: 14
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 83
+      f: 54.6
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 1.4
+      f: 3.2
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 33.16
+      f: 41.68
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 17.5
+      f: 17
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 3.95
+      f: 3.95
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 6.8
+      f: 6.1
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 10.3
+      f: 37.5
+    parkinsonsDisease:
+      m: 0.72
+      f: 0.48
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 17.77
+      f: 17.17
+    ulcers:
+      m: 1.79
+      f: 3.36
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.5
+      f: 24.5
+    polypharmacy:
+      m: 23.8
+      f: 23.8
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 7.8
+      f: 7.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 4.8
+      f: 7.2
+    needsCare:
+      m: 27.5
+      f: 27.5
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 1.14
+      f: 2.56
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.06
+      f: 0.19
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2.5
+      f: 7
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
+- ll: 80
+  ul: 84
+  n: 1738000
+  cancerIncidence:
+    all: 40831
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 11.9
+      f: 11.9
+    dementia:
+      m: 10.3
+      f: 11.7
+    historyOfDelirium:
+      m: 1
+      f: 1
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 24
+      f: 37
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 96.6
+      f: 86.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 3.8
+      f: 4.1
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 33.16
+      f: 41.68
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 13.1
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 13.5
+      f: 13.5
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 6.8
+      f: 6.1
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 16.6
+      f: 47.2
+    parkinsonsDisease:
+      m: 0.99
+      f: 0.66
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 22.22
+      f: 20.59
+    ulcers:
+      m: 1.79
+      f: 3.36
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 27
+      f: 27
+    polypharmacy:
+      m: 12.2
+      f: 12.2
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 11.6
+      f: 11.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 10
+      f: 12.9
+    needsCare:
+      m: 38.2
+      f: 38.2
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 2.18
+      f: 2.99
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.003
+      f: 0.118
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2
+      f: 5
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
+- ll: 85
+  ul: 89
+  n: 1058000
+  cancerIncidence:
+    all: 26766
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 14.5
+      f: 14.5
+    dementia:
+      m: 15.1
+      f: 20.2
+    historyOfDelirium:
+      m: 14
+      f: 14
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 24
+      f: 37
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 96.6
+      f: 86.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 3.8
+      f: 4.1
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 44.75
+      f: 48.61
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 13.1
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 13.5
+      f: 13.5
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 12.6
+      f: 12.5
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 16.6
+      f: 47.2
+    parkinsonsDisease:
+      m: 0.96
+      f: 0.64
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 27.42
+      f: 24.48
+    ulcers:
+      m: 8.29
+      f: 8.06
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 27
+      f: 27
+    polypharmacy:
+      m: 5
+      f: 5
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 11.6
+      f: 11.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 19.2
+      f: 25.6
+    needsCare:
+      m: 58.5
+      f: 58.5
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 2.18
+      f: 2.99
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.003
+      f: 0.118
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2
+      f: 5
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
+- ll: 90
+  ul: 94
+  n: 469000
+  cancerIncidence:
+    all: 13711
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 14.5
+      f: 14.5
+    dementia:
+      m: 22.6
+      f: 33
+    historyOfDelirium:
+      m: 14
+      f: 14
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 65
+      f: 58
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 96.6
+      f: 86.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 3.8
+      f: 4.1
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 44.75
+      f: 48.61
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 13.1
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 13.5
+      f: 13.5
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 12.6
+      f: 12.5
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 16.6
+      f: 47.2
+    parkinsonsDisease:
+      m: 0.7
+      f: 0.47
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 34.48
+      f: 30.06
+    ulcers:
+      m: 8.29
+      f: 8.06
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.3
+      f: 24.3
+    polypharmacy:
+      m: 2.4
+      f: 2.4
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 11.6
+      f: 11.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 28.6
+      f: 39.4
+    needsCare:
+      m: 76
+      f: 76
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 2.18
+      f: 2.99
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.003
+      f: 0.118
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2
+      f: 5
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
+- ll: 95
+  ul: 99
+  n: 128000
+  cancerIncidence:
+    all: 3072
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 14.5
+      f: 14.5
+    dementia:
+      m: 28.8
+      f: 44.2
+    historyOfDelirium:
+      m: 14
+      f: 14
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 65
+      f: 58
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 96.6
+      f: 86.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 3.8
+      f: 4.1
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 44.75
+      f: 48.61
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 13.1
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 13.5
+      f: 13.5
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 12.6
+      f: 12.5
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 16.6
+      f: 47.2
+    parkinsonsDisease:
+      m: 0.7
+      f: 0.47
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 34.48
+      f: 30.06
+    ulcers:
+      m: 8.29
+      f: 8.06
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.3
+      f: 24.3
+    polypharmacy:
+      m: 2.4
+      f: 2.4
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 11.6
+      f: 11.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 28.6
+      f: 39.4
+    needsCare:
+      m: 76
+      f: 76
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 2.18
+      f: 2.99
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.003
+      f: 0.118
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2
+      f: 5
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
+- ll: 100
+  ul: 112
+  n: 15000
+  cancerIncidence:
+    all: 360
+    prostate:
+      m: 0.243
+      f: 0
+    breast:
+      m: 0
+      f: 0.211
+    lung:
+      m: 0.161
+      f: 0.1594
+    bowel:
+      m: 0.138
+      f: 0.144
+    cup:
+      m: 0
+      f: 0.044
+    pancreas:
+      m: 0
+      f: 0.042
+    bladder:
+      m: 0.058
+      f: 0
+    nhl:
+      m: 0.038
+      f: 0
+    other:
+      m: 0.362
+      f: 0.3996
+  geriatricVulnerabilities:
+    mci:
+      m: 14.5
+      f: 14.5
+    dementia:
+      m: 28.8
+      f: 44.2
+    historyOfDelirium:
+      m: 14
+      f: 14
+    malnutrition:
+      m: 8.5
+      f: 8.5
+    depression:
+      m: 22
+      f: 28
+    schizophrenia: #https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 0.75
+      f: 0.75
+    bad: # https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/prevalence-of-mental-disorders-in-elderly-people-the-european-mentdisicf65-study/3B67B333C3633092AA5ECECCBC704330
+      m: 4.2
+      f: 4.2
+    falls:
+      m: 37
+      f: 27
+    frailty:
+      m: 65
+      f: 58
+    aud:
+      m: 1.2
+      f: 0.24
+    difficultyWalkingOutside:
+      m: 17.5
+      f: 30
+    hearingLoss:
+      m: 96.6
+      f: 86.1
+    decreasedSocialActivity:
+      m: 44
+      f: 44
+    anaemia:
+      m: 3.8
+      f: 4.1
+    anorexiaOfAgeing:
+      m: 0.15
+      f: 0.25
+    ckd:
+      m: 44.75
+      f: 48.61
+    diabetes:
+      m: 13.5
+      f: 10.6
+    heartDisease:
+      m: 15.6
+      f: 15.6
+    lungDisease:
+      m: 13.1
+      f: 16.3
+    drinksAlcohol:
+      m: 80
+      f: 72
+    aerobicallyActive:
+      m: 36
+      f: 26
+    arthritis:
+      m: 39.6
+      f: 55.9
+    asthma:
+      m: 21.5
+      f: 21.5
+    copd:
+      m: 27.24
+      f: 15.9
+    af:
+      m: 13.5
+      f: 13.5
+    stroke:
+      m: 13.1
+      f: 10.7
+    footProblems:
+      m: 71
+      f: 71
+    fragilityFracture:
+      m: 23.8
+      f: 47.3
+    heartFailure:
+      m: 12.6
+      f: 12.5
+    hypertension:
+      m: 75
+      f: 66
+    orthostaticHypotension:
+      m: 22.2
+      f: 22.2
+    syncope:
+      m: 4.84
+      f: 4.84
+    osteoporosis:
+      m: 16.6
+      f: 47.2
+    parkinsonsDisease:
+      m: 0.7
+      f: 0.47
+    pepticUlcer:
+      m: 5
+      f: 5
+    pvd:
+      m: 34.48
+      f: 30.06
+    ulcers:
+      m: 8.29
+      f: 8.06
+    thyroidDisease:
+      m: 7.8
+      f: 20.5
+    luts:
+      m: 72.8
+      f: 72.8
+    dizziness:
+      m: 11
+      f: 11
+    breathlessness:
+      m: 24.3
+      f: 24.3
+    polypharmacy:
+      m: 2.4
+      f: 2.4
+    sleepDisturbance:
+      m: 64
+      f: 64
+    faecalIncontinence:
+      m: 11.6
+      f: 11.7
+    urinaryIncontinence:
+      m: 8.9
+      f: 20.2
+    weightLoss:
+      m: 20.3
+      f: 25
+    badlImpairment:
+      m: 36.7
+      f: 36.7
+    iadlImpairment:
+      m: 54.6
+      f: 54.6
+    homebound:
+      m: 5.6
+      f: 5.6
+    visualImpairment:
+      m: 28.6
+      f: 39.4
+    needsCare:
+      m: 76
+      f: 76
+    socialVulnerability:
+      m: 7.4
+      f: 7.4
+    heartValveDisease:
+      m: 14
+      f: 12.6
+    mi:
+      m: 12.08
+      f: 5.5
+    angina:
+      m: 16.96
+      f: 11.15
+    ctd:
+      m: 0.0195
+      f: 0.3705
+    ra: #https://pubmed.ncbi.nlm.nih.gov/12096230/
+      m: 2.18
+      f: 2.99
+    sle: #https://ard.bmj.com/content/75/1/136
+      m: 0.003
+      f: 0.118
+    liverDisease:
+      m: 1.4
+      f: 1.4
+    tia:
+      m: 7.9
+      f: 7.9
+    severeWeightLoss:
+      m: 6
+      f: 6
+    exhaustion:
+      m: 19
+      f: 12
+    lowActivity:
+      m: 20
+      f: 20
+    slowWalk:
+      m: 20
+      f: 20
+    lowGripStrength:
+      m: 20
+      f: 20
+    migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
+      m: 2
+      f: 5
+    ed: # https://www.nature.com/articles/3900622.pdf
+      m: 53.4
+      f: 0
+    chronicPain: #https://bmjopen.bmj.com/content/6/6/e010364
+      m: 52
+      f: 57
+    livesAlone:
+      m: 13
+      f: 27
