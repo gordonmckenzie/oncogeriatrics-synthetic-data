@@ -64,6 +64,9 @@ def generateSample():
     smoking_m, smoking_f = u.createMultinomialDistribution(config['sample-size'], config['chance-of-being-male'], config['smoking-stats-m'], config['smoking-stats-f'])
     t.updateProgress()  
 
+    ## Simulacrum
+    df_sim = pd.read_hdf('data/simulacrum.h5')
+
     id = 1 # Patient unique ID auto-increment
 
     t.print("\nGenerating patient samples...")
@@ -92,7 +95,6 @@ def generateSample():
             genetic_profile = getGeneticRisk(gender)
         
             ###----Cancer allocation----###
-            # ? Introduce simulacrum here
             cancerTypes = []
             cancerWeights = []
             for cancer in band['cancerIncidence'].items():
@@ -105,6 +107,18 @@ def generateSample():
                 k=1
             )
             patient['cancer'] = choice[0]
+
+            # Will need to either map to MDT or include accurate tumour site
+            ###----Query simulacrum------###
+            q = df_sim[(df_sim.age == patient['age']) & (df_sim.gender == gender) & (df_sim.cancer_site == u.getMDT(patient['cancer']))]
+            simulacrum_sample = q.sample(1) # Random sample from DataFrame
+            patient['ethnicity'] = simulacrum_sample['ethnicity'].values[0]
+            patient['deprivation'] = int(simulacrum_sample['deprivation'].values[0])
+            patient['mdt'] = simulacrum_sample['cancer_site'].values[0]
+            patient['cancer_stage'] = simulacrum_sample['cancer_stage'].values[0]
+            patient['surgery'] = int(simulacrum_sample['surgery'].values[0])
+            patient['chemotherapy'] = int(simulacrum_sample['chemotherapy'].values[0])
+            patient['radiotherapy'] = int(simulacrum_sample['radiotherapy'].values[0])
 
             ###----Root node allocation-###
             # Aerobic activity

@@ -1,7 +1,30 @@
 import itertools
+import os
 import numpy as np
+import pandas as pd
 import yaml
 from scipy.stats import bernoulli
+import vaex
+
+rng = np.random.default_rng()
+
+df = pd.read_hdf('data/simulacrum.h5')
+
+age = 65
+gender = 'm'
+cancer_site = 'lung'
+
+q = df[(df.age == age) & (df.gender == gender) & (df.cancer_site == cancer_site)]
+
+print(q.sample(1)['ethnicity'].values[0])
+
+"""
+#print(f"Age {round(df['age'].mean(), 1)} ({df['age'].min()}-{df['age'].max()}))
+print(f"{round(df['gender'].value_counts().values[0]/(df['gender'].value_counts().values[0] + df['gender'].value_counts().values[1]) * 100, 1)}% female")
+print(df['surgery'].mean(), df['chemotherapy'].mean(), df['radiotherapy'].mean())
+df['deprivation'] = df['deprivation'].astype(int)
+print(df['deprivation'].mean())
+"""
 
 #rng = np.random.default_rng()
 
@@ -57,6 +80,7 @@ res = {prevalence[i]: prevalence_str[i] for i in range(len(prevalence))}
 print(res)
 """
 
+""""
 array = {'mci': 'Mild cognitive impairment',
 'dementia': 'Dementia',
 'hearingLoss': 'Hearing loss',
@@ -96,3 +120,4 @@ array = {'mci': 'Mild cognitive impairment',
 
 for key, value in sorted(array.items()):
     print(f"'{key}': '{value}',")
+"""

@@ -116,6 +116,11 @@ class Utilities:
 
         return dist_m, dist_f
 
+    def getMDT(self, cancer):
+        # Need CUP / ICD-10 C80.1 and way to handle other!
+        sites = {'ovary': 'gynaecological', 'breast': 'breast', 'prostate': 'urological', 'lung': 'lung', 'bowel': 'lower_gi', 'uterus': 'gynaecological', 'h&n': 'head_and_neck', 'renal': 'urological', 'bladder': 'urological', 'nhl': 'haematological', 'pancreas': 'hepatopancretaicobiliary'}
+        return sites[cancer]
+
     # Return Yes or No for PGM inference
     def inferenceResult(self, p):
         return 'Yes' if p == 1 or p == True else 'No'
