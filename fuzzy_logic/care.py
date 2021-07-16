@@ -56,4 +56,9 @@ def inferCare(_age, _disability, _alone):
     # Perform Sugeno inference and print output
     infer = fs.Sugeno_inference(["Care"])["Care"]
 
+    if infer == 0:
+        f = open("issues/issues.txt", "a")
+        f.write(f"Results that made Sugeno 0 for care.py Age:{_age},  Disability:{_disability}, Alone:{_alone}\n\n")
+        f.close()
+
     return 1 if rng.random() < infer/100 else 0

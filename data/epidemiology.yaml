@@ -1680,7 +1680,7 @@
       m: 13
       f: 27
 - ll: 100
-  ul: 112
+  ul: 105 # Maximum in simulacrum, 112 maximum in UK
   n: 15000
   cancerIncidence:
     all: 360

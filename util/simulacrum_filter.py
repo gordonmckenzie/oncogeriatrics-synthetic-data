@@ -8,7 +8,7 @@ path_sact_pt = "/Volumes/My Passport for Mac/Simulacrum/simulacrum_release_v1.2.
 path_sact_drug = "/Volumes/My Passport for Mac/Simulacrum/simulacrum_release_v1.2.0.2017/data/sim_sact_regimen.csv.hdf5"
 #os.chdir("/Volumes/My Passport for Mac/Simulacrum/simulacrum_release_v1.2.0.2017/data/")
 #dv = vaex.from_csv(path_sact_pt, convert=True, chunk_size=5_000_000)
-#dv = vaex.from_csv(path_eth, convert=True)
+#dv = vaex.from_csv(path_icd, convert=True)
 
 dv_p = vaex.open(path_p)
 dv_t = vaex.open(path_t)
@@ -82,14 +82,13 @@ dv_sact_drug = vx_dedupe(dv_sact_drug, ['MERGED_PATIENT_ID'], concat_first=True)
 
 joined = joined.join(dv_sact_drug, left_on='MERGED_PATIENT_ID', right_on='MERGED_PATIENT_ID', rsuffix="_")
 
+filter_t = joined[(joined.AGE >= 65) & (((joined.SEX != 1) | (joined.SEX != 2))) & ((joined.DESC != "unknown") & (joined.DESC != "UNKNOWN")) & ((joined.STAGE_BEST != "?") | (joined.STAGE_BEST != "U")) & ((joined.MDT != "unknown") & (joined.MDT != "skin"))]
 
-filter_t = joined[(joined.AGE >= 65) & (joined.REGION != "unknown") & (((joined.SEX != 1) | (joined.SEX != 2))) & (joined.DESC != "unknown") & (joined.DESC != "UNKNOWN") & (joined.STAGE_BEST != "?") & (joined.STAGE_BEST != "U") & (joined.REGION != "skin")]
-
-renames = {"AGE": "age", "SEX": "gender", "DESC": "ethnicity", "REGION": 'cancer_site', "STAGE_BEST": 'cancer_stage', 'QUINTILE_2015': 'deprivation', 'DATE_FIRST_SURGERY': 'surgery', "INTENT_OF_TREATMENT": "chemotherapy", "CHEMO_RADIATION": "radiotherapy"}
+renames = {"AGE": "age", "SEX": "gender", "DESC": "ethnicity", "MDT": 'cancer_mdt', "SITE": "cancer_site", "STAGE_BEST": 'cancer_stage', 'QUINTILE_2015': 'deprivation', 'DATE_FIRST_SURGERY': 'surgery', "INTENT_OF_TREATMENT": "chemotherapy", "CHEMO_RADIATION": "chemoradiotherapy"}
 for old_name,new_name in renames.items():
     filter_t.rename(old_name,new_name)
 
-df = filter_t.to_pandas_df(["age", "gender", "ethnicity", "deprivation", "cancer_site", "cancer_stage", "surgery", "chemotherapy", "radiotherapy"])
+df = filter_t.to_pandas_df(["age", "gender", "ethnicity", "deprivation", "cancer_mdt", "cancer_site", "cancer_stage", "surgery", "chemotherapy", "chemoradiotherapy"])
 
 df['deprivation'] = df['deprivation'].apply(lambda x: x.split(' ')[0])
 
@@ -98,12 +97,12 @@ df['gender'] = df['gender'].apply(lambda x: 'm' if x == 1 else 'f')
 df['surgery'] = df['surgery'].apply(lambda x: 0 if x is None else 1)
 
 df['chemotherapy'] = df['chemotherapy'].fillna(0)
-df['radiotherapy'] = df['radiotherapy'].fillna(0)
+df['chemoradiotherapy'] = df['chemoradiotherapy'].fillna(0)
 
-df['radiotherapy'] = df['radiotherapy'].apply(lambda x: 0 if (x == None or x == 'N' or x == 0) else 1)
+df['chemoradiotherapy'] = df['chemoradiotherapy'].apply(lambda x: 0 if (x == None or x == 'N' or x == 0) else 1)
 
 df['chemotherapy'] = df['chemotherapy'].apply(lambda x: 0 if (x == None or x == 0) else 1)
 
-print(len(df[["age", "gender", "ethnicity", "deprivation", "cancer_site", "cancer_stage", "surgery", "chemotherapy", "radiotherapy"]]))
+#print(len(df[["age", "gender", "ethnicity", "deprivation", "cancer_mdt", "cancer_site", "cancer_stage", "surgery", "chemotherapy", "chemoradiotherapy"]]))
 
-df.to_hdf('simulacrum.h5', key='simulacrum', mode='w')
+df.to_hdf('data/simulacrum.h5', key='simulacrum', mode='w')

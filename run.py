@@ -1,4 +1,4 @@
-import yaml, random, time
+import yaml, random, time, sys
 import numpy as np
 import pandas as pd
 from util.terminal import Terminal
@@ -95,30 +95,19 @@ def generateSample():
             genetic_profile = getGeneticRisk(gender)
         
             ###----Cancer allocation----###
-            cancerTypes = []
-            cancerWeights = []
-            for cancer in band['cancerIncidence'].items():
-                if cancer[0] != 'all':
-                    cancerTypes.append(cancer[0])
-                    cancerWeights.append(cancer[1][gender])
-            choice = random.choices(
-                cancerTypes, 
-                weights=cancerWeights,
-                k=1
-            )
-            patient['cancer'] = choice[0]
-
-            # Will need to either map to MDT or include accurate tumour site
-            ###----Query simulacrum------###
-            q = df_sim[(df_sim.age == patient['age']) & (df_sim.gender == gender) & (df_sim.cancer_site == u.getMDT(patient['cancer']))]
-            simulacrum_sample = q.sample(1) # Random sample from DataFrame
+            # Query simulacrum database (pre-filtered, sanitised and annotated)
+            q = df_sim[(df_sim.age == patient['age']) & (df_sim.gender == gender)]
+            if q.sample().empty == True: # Defense against the specific age and gender combination being in simulacrum
+                q = df_sim[(df_sim.age > patient['age']) & (df_sim.age < (patient['age'] + 5)) & (df_sim.gender == gender)]
+            simulacrum_sample = q.sample(n = 1) # Random sample from DataFrame
             patient['ethnicity'] = simulacrum_sample['ethnicity'].values[0]
             patient['deprivation'] = int(simulacrum_sample['deprivation'].values[0])
-            patient['mdt'] = simulacrum_sample['cancer_site'].values[0]
+            patient['cancer_mdt'] = simulacrum_sample['cancer_mdt'].values[0] # Cancer site maps to MDT
+            patient['cancer_site'] = simulacrum_sample['cancer_site'].values[0]
             patient['cancer_stage'] = simulacrum_sample['cancer_stage'].values[0]
             patient['surgery'] = int(simulacrum_sample['surgery'].values[0])
             patient['chemotherapy'] = int(simulacrum_sample['chemotherapy'].values[0])
-            patient['radiotherapy'] = int(simulacrum_sample['radiotherapy'].values[0])
+            patient['chemoradiotherapy'] = int(simulacrum_sample['chemoradiotherapy'].values[0])
 
             ###----Root node allocation-###
             # Aerobic activity
@@ -266,12 +255,11 @@ def generateSample():
                 pgm.inferenceResult(patient['osteoporosis'])
             )
 
-            if ['aerobicallyActive'] != 1:
-                patient['ulcers'] = pgm.inferUlcers(
+            patient['ulcers'] = pgm.inferUlcers(
                     band,
                     gender,
                     pgm.inferenceResult(patient['urinaryIncontinence'])
-                )
+            ) if ['aerobicallyActive'] != 1 else 0
 
             patient['orthostaticHypotension'] = pgm.inferOrthostaticHypotension(
                 band,
@@ -449,14 +437,42 @@ def generateSample():
             #https://ogg.osu.edu/media/documents/sage/course3/fear_of_falling.pdf
             patient['fearOfFalling'] = 1 if ((patient['falls'] == 1 and rng.random() < (0.32 * (1 if gender == 'm' else 2)))) else 0
 
-            patient['malnutrition'], patient['weightLoss'], patient['anorexia'] = pgm.inferMalnutrition(
+            patient['socialIsolation'] = pgm.inferSocialIsolation(
                 band, 
                 gender, 
-                patient['parkinsonsDisease'],
-                patient['badlImpairment'],
-                patient['mci'],
-                patient['dementia']
-            ) if patient['aerobicallyActive'] != 1 else 0,0,0
+                patient['hearingLoss'],
+                patient['falls'],
+                patient['difficultyWalkingOutside'],
+                patient['badlImpairment']
+            ) if patient['aerobicallyActive'] != 1 else 0
+
+            patient['homebound'] = pgm.inferHomebound(
+                band, 
+                gender, 
+                patient['depression'],
+                patient['socialIsolation'],
+                patient['usesWalkingAid'],
+                patient['falls'],
+                patient['fearOfFalling'],
+                patient['chronicPain']
+            ) if patient['aerobicallyActive'] != 1 else 0
+
+            if patient['aerobicallyActive'] != 1:
+                malnutrition = pgm.inferMalnutrition(
+                    band, 
+                    gender, 
+                    patient['parkinsonsDisease'],
+                    patient['badlImpairment'],
+                    patient['mci'],
+                    patient['dementia']
+                ) 
+                patient['malnutrition'] = malnutrition[0]
+                patient['weightLoss'] = malnutrition[1]
+                patient['anorexia']= malnutrition[2]
+            else:
+                patient['malnutrition'] = 0
+                patient['weightLoss'] = 0
+                patient['anorexia'] = 0
 
             patient['fragilityFracture'] = pgm.inferFragilityFracture(
                 band,
@@ -498,7 +514,7 @@ def generateSample():
             ###--Assign self-reported health-------###
             self_reported_health = round(rng.choice(srh_dist_m[index] if gender == 'm' else srh_dist_f[index], 1)[0])
             # This could potentially be fuzzy logic or PGM
-            self_reported_health = rng.sample(set([3,4]), 1)[0] if patient['aerobicallyActive'] == 1 and self_reported_health < 3 and rng.random() > 0.7 else self_reported_health
+            self_reported_health = rng.integers([3,4])[0] if patient['aerobicallyActive'] == 1 and self_reported_health < 3 and rng.random() > 0.7 else self_reported_health
             patient['self_reported_health'] = round(self_reported_health)
 
             # Assign electronic Frailty Index (eFI)
@@ -532,6 +548,7 @@ def generateSample():
                 pgm.inferenceResult(patient['historyOfDelirium']),
                 pgm.inferenceResult(patient['frailty']),
                 pgm.inferenceResult(patient['ckd']),
+                pgm.inferenceResult(bool(patient['mci'] == 1 or patient['dementia'] == 1)),
                 pgm.inferenceResult(patient['depression']),
                 pgm.inferenceResult(patient['badlImpairment']),
                 pgm.inferenceResult(patient['iadlImpairment']),
@@ -540,6 +557,7 @@ def generateSample():
                 pgm.inferenceResult(bool(patient['smoking'] == 0)),
                 pgm.inferenceResult(bool(patient['t1dm'] == 1 or patient['t2dm'] == 1)),
                 pgm.inferenceResult(bool(patient['mi'] == 1 or patient['angina'] == 1)),
+                pgm.inferenceResult(patient['hypertension']),
                 pgm.inferenceResult(patient['polypharmacy']),
                 pgm.inferenceResult(patient['heartFailure']),
                 pgm.inferenceResult(patient['visualImpairment'])
@@ -607,8 +625,7 @@ def generateSample():
             patient['increased_los_risk'], patient['increased_los_present'] = pgm.inferIncreasedLOS(
                 pgm.inferenceResult(patient['frailty']),
                 pgm.inferenceResult(patient['aud']),
-                pgm.inferenceResult(patient['iadlImpairment']),
-                pgm.inferenceResult(patient['badlImpairment']),
+                pgm.inferenceResult(bool(patient['iadlImpairment'] == 1  or patient['iadlImpairment'] == 1)),
                 patient['asa']
             )
 
@@ -625,15 +642,13 @@ def generateSample():
                 pgm.inferenceResult(bool(patient['smoking'] == 0)),
                 pgm.inferenceResult(patient['frailty']),
                 pgm.inferenceResult(patient['badlImpairment']),
-                pgm.inferenceResult(patient['difficultyWalkingOutside']),
+                pgm.inferenceResult(patient['difficultyWalkingOutside'])
             )
 
-            patient['chemotherapy_toxicity_risk'],
-            patient['chemotherapy_toxicity_score'], 
-            patient['chemotherapy_toxicity_present'] = u.calculateCarg(
+            patient['chemotherapy_toxicity_risk'], patient['chemotherapy_toxicity_score'], patient['chemotherapy_toxicity_present'] = u.calculateCarg(
                 patient['age'],
                 gender,
-                patient['cancer'],
+                patient['cancer_site'],
                 patient['height'],
                 patient['weight'],
                 patient['anaemia'],
@@ -642,7 +657,7 @@ def generateSample():
                 patient['falls'],
                 patient['medicationAssistance'],
                 patient['difficultyWalkingOutside'],
-                0 # Needs to calculate decreased social activity somehow 
+                0 # Needs to calculate decreased social activity somehow - TODO
             )
 
             patient['post_op_mace_risk'], patient['post_op_mace_present'] = u.calculateGupta(
@@ -671,7 +686,7 @@ def generateSample():
                1 if patient['drinksAlcohol'] == 1 else 0,
                patient['height'],
                patient['weight'],
-               patient['aerobicActivity'],
+               patient['aerobicallyActive'],
                patient['difficultyBathing'],
                patient['difficultyWalkingOutside'],
                patient['incorrectDateReported'],
@@ -709,9 +724,14 @@ def generateSample():
             id += 1
             t.updateProgress()
 
+    # df = pd.DataFrame(pop)
+    # date = time.strftime("%d-%m-%Y-%H-%M-%S")
+    # df.to_csv(f'results/data/{date}.csv', index=False)
+    # sys.exit()
+
 generateSample()
 df = pd.DataFrame(pop)
-date = time.strftime("%d-%m-%Y-%H:%M:%S")
+date = time.strftime("%d-%m-%Y-%H-%M-%S")
 df.to_csv(f'results/data/{date}.csv', index=False)
 analysis = Analysis(pop)
 generateReport(analysis)

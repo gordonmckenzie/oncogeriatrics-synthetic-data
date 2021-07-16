@@ -10,21 +10,20 @@ rng = np.random.default_rng()
 
 df = pd.read_hdf('data/simulacrum.h5')
 
-age = 65
-gender = 'm'
-cancer_site = 'lung'
+#age = 65
+#gender = 'm'
+#cancer_site = 'lung'
 
-q = df[(df.age == age) & (df.gender == gender) & (df.cancer_site == cancer_site)]
+#q = df[(df.age == age) & (df.gender == gender) & (df.cancer_site == cancer_site)]
 
-print(q.sample(1)['ethnicity'].values[0])
+# print(f"Age {round(df['age'].mean(), 1)} ({df['age'].min()}-{df['age'].max()})")
+# print(f"{round(df['gender'].value_counts().values[0]/(df['gender'].value_counts().values[0] + df['gender'].value_counts().values[1]) * 100, 1)}% female")
+# print(df['surgery'].mean(), df['chemotherapy'].mean(), df['chemoradiotherapy'].mean())
+# df['deprivation'] = df['deprivation'].astype(int)
+# print(df['deprivation'].mean())
 
-"""
-#print(f"Age {round(df['age'].mean(), 1)} ({df['age'].min()}-{df['age'].max()}))
-print(f"{round(df['gender'].value_counts().values[0]/(df['gender'].value_counts().values[0] + df['gender'].value_counts().values[1]) * 100, 1)}% female")
-print(df['surgery'].mean(), df['chemotherapy'].mean(), df['radiotherapy'].mean())
-df['deprivation'] = df['deprivation'].astype(int)
-print(df['deprivation'].mean())
-"""
+print(df.groupby('age').mean())
+
 
 #rng = np.random.default_rng()
 

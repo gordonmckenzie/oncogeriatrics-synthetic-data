@@ -71,4 +71,9 @@ def inferWalking(_cvds, _resp, _cog, _msk):
     # Perform Sugeno inference and print output
     infer = fs.Sugeno_inference(["Mobility"])["Mobility"]
 
+    if infer == 0:
+        f = open("issues/issues.txt", "a")
+        f.write(f"Results that made Sugeno 0 for walking.py CVDs:{_cvds},  Resp:{_resp}, Cognitive{_cog}, MSK: {_msk}\n\n")
+        f.close()
+
     return 1 if rng.random() < infer/100 else 0

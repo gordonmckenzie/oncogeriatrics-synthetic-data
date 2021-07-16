@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import plotly.express as px
+import plotly.graph_objects as go
 import yaml
 import statsmodels.stats.api as sm
 from itertools import groupby
@@ -34,7 +35,7 @@ class Analysis():
         return self.pop['gender'].value_counts(normalize=True).iloc[0]
 
     def cancerPrevalence(self):
-        return self.pop['cancer'].value_counts(normalize=True)
+        return self.pop['cancer_site'].value_counts(normalize=True)
 
     def anthropometrics(self):
         return (
@@ -65,10 +66,12 @@ class Analysis():
 
         # Create grouped horizontal bar plot with custom error bars using matplotlib styled with Seaborn
         def grouped_barplot(df, cat, subcat, val, err1, err2):
+            plt.clf()
+            """
             u = df[cat].unique()
             y = np.arange(len(u))
             subx = df[subcat].unique()
-            offsets = (np.arange(len(subx))-np.arange(len(subx)).mean())/(len(subx)+1.)
+            offsets = (np.arange(len(subx))-np.arange(len(subx)).mean())/(len(subx))
             height = np.diff(offsets).mean()
             for i,gr in enumerate(subx):
                 dfg = df[df[subcat] == gr]
@@ -79,6 +82,21 @@ class Analysis():
             plt.yticks(y, u)
             plt.legend()
             plt.savefig(f"results/plots/prevalence_expected.png", bbox_inches='tight')
+            """
+            fig = go.Figure()
+            u = df[cat].unique()
+            y = np.arange(len(u))
+            subx = df[subcat].unique()
+            for _,gr in enumerate(subx):
+                dfg = df[df[subcat] == gr]
+                fig.add_trace(go.Bar(
+                    name=gr,
+                    x=dfg[val].values, y=y,
+                    orientation='h',
+                    error_x=dict(type='data', array=[dfg[err1].values, dfg[err2].values])
+                ))
+            fig.update_layout(barmode='group')
+            fig.write_image("results/plots/prevalence_expected.png")
 
         # Get all conditions from epidemiology.yaml and average by age
         conditions = []
@@ -124,36 +142,38 @@ class Analysis():
 
     # Relationships between frailty, disability and multimorbidity...
     def FDM(self):
+        plt.clf()
         df = self.pop
 
         def getPercentage(v):
             f"{round(v, 1)}%"
 
         venn3_unweighted(subsets = (
-            getPercentage(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 0)].mean()), # D
-            getPercentage(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)].mean()), # F
-            getPercentage(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)].mean()), # DF
-            getPercentage(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)].mean()), # M
-            getPercentage(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)].mean()), # DM
-            getPercentage(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)].mean()), # MF
-            getPercentage(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)].mean()) # DFM
+            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 0)]) / len(df)), # D
+            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df)), # F
+            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df)), # DF
+            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df)), # M
+            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df)), # DM
+            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df)), # MF
+            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df)) # DFM
         ), set_labels = ('Disability', 'Frailty', 'Multimorbidity'), set_colors=('grey', 'grey', 'grey', 'grey'), alpha = 0.5)
 
         plt.savefig(f"results/plots/fdm.png")
 
     def bmiActivityPlot(self):
-
+        
+        plt.clf()
         df = self.pop
 
         data = dict(values=[
-            df[(df['bmi'] >= 25) & (df['bmi'] < 30)].mean(), # Overweight
-            df[(df['bmi'] >= 18.5) & (df['bmi'] < 25)].mean(), # Normal
-            df[df['bmi'] >= 30].mean(), # Obese
-            df[(df['bmi'] >= 18.5) & (df['bmi'] < 25) & (df['aerobicallyActive'] == 1)].mean(), # Normal weight and active
-            df[(df['bmi'] >= 25) & (df['bmi'] < 30) & (df['aerobicallyActive'] == 1)].mean(), # Overweight and active
-            df[df['bmi'] < 18.5].mean(), # Underweight
-            df[(df['bmi'] < 18.5) & (df['aerobicallyActive'] == 1)].mean(), # Underweight and active
-            df[(df['bmi'] > 30) & (df['aerobicallyActive'] == 1)].mean() # Obese and active
+            round(len(df[(df['bmi'] >= 25) & (df['bmi'] < 30)]) / len(df) * 100, 1), # Overweight
+            round(len(df[(df['bmi'] >= 18.5) & (df['bmi'] < 25)]) / len(df) * 100, 1), # Normal
+            round(len(df[df['bmi'] >= 30]) / len(df) * 100, 1), # Obese
+            round(len(df[(df['bmi'] >= 18.5) & (df['bmi'] < 25) & (df['aerobicallyActive'] == 1)]) / len(df) * 100, 1), # Normal weight and active
+            round(len(df[(df['bmi'] >= 25) & (df['bmi'] < 30) & (df['aerobicallyActive'] == 1)]) / len(df) * 100, 1), # Overweight and active
+            round(len(df[df['bmi'] < 18.5]) / len(df) * 100, 1), # Underweight
+            round(len(df[(df['bmi'] < 18.5) & (df['aerobicallyActive'] == 1)]) / len(df) * 100, 1), # Underweight and active
+            round(len(df[(df['bmi'] > 30) & (df['aerobicallyActive'] == 1)]) / len(df) * 100, 1) # Obese and active
         ], labels=['Overweight', 'Normal', 'Obese', 'Normal weight and active', 'Overweight and active', 'Underweight', 'Underweight and active', 'Obese and active'])
         
         fig = px.funnel(data, y='labels', x='values')
@@ -190,7 +210,7 @@ class Analysis():
 
 
     def efiMeans(self):
-        return self.pop.groupby("efi_classification").mean()
+        return self.pop['efi_classification'].value_counts() / self.pop['efi_classification'].value_counts() * 100
 
     def efiAccuracy(self):
         df = self.pop
@@ -214,10 +234,10 @@ class Analysis():
 
     def outcomeStats(self):
 
-        outcomes = []
+        outcomes = {}
 
-        for k, v in config['pretty-outcome-strings']:
-            outcomes.append({v: f'{round(self.pop[k].mean(), 1)} ({round(self.pop[k].quantile(0.025))}-{round(self.pop[k].quantile(0.975))})'})
+        for k,v in config['pretty-outcome-strings'].items():
+            outcomes[v] = f'{round(self.pop[k].mean(), 1) * 100} ({round(self.pop[k].quantile(0.025)) * 100}-{round(self.pop[k].quantile(0.975)) * 100})'
 
         return outcomes
 

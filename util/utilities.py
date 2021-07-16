@@ -116,9 +116,12 @@ class Utilities:
 
         return dist_m, dist_f
 
+    # Return the tumour site-specific MDT
     def getMDT(self, cancer):
-        # Need CUP / ICD-10 C80.1 and way to handle other!
-        sites = {'ovary': 'gynaecological', 'breast': 'breast', 'prostate': 'urological', 'lung': 'lung', 'bowel': 'lower_gi', 'uterus': 'gynaecological', 'h&n': 'head_and_neck', 'renal': 'urological', 'bladder': 'urological', 'nhl': 'haematological', 'pancreas': 'hepatopancretaicobiliary'}
+        # Other and specific sites not handled ideally but useful approximation
+        if cancer == 'other':
+            return self.rng.choice(['haematological', 'upper_gi', 'neurosurgical', 'bone', 'sarcoma', 'thyroid', 'opthalmological'])
+        sites = {'ovary': 'gynaecological', 'breast': 'breast', 'prostate': 'urological', 'lung': 'lung', 'bowel': 'lower_gi', 'uterus': 'gynaecological', 'h&n': 'head_and_neck', 'renal': 'urological', 'bladder': 'urological', 'nhl': 'haematological', 'pancreas': 'hepatopancreaticobiliary', 'cup': 'cup'}
         return sites[cancer]
 
     # Return Yes or No for PGM inference
@@ -287,7 +290,7 @@ class Utilities:
         if age >= 72:
             score += 2
         
-        higherRiskCancers = ['bowel', 'prostate', 'ovary', 'uterus', 'renal']
+        higherRiskCancers = ['colon', 'oesophageal', 'stomach', 'rectal', 'prostate', 'bladder', 'ovarian', 'uterine', 'renal']
         for hrc in higherRiskCancers:
             if hrc == cancer:
                 score += 2
@@ -409,28 +412,20 @@ class Utilities:
             creatinine = 0.61
         
         procedure = 0
-        if p['cancer'] == 'breast':
+        if p['cancer_mdt'] == 'breast':
             procedure = -1.61
-        elif p['cancer'] == 'h&n':
+        elif p['cancer_mdt'] == 'head_and_neck':
             procedure = 0.71
-        elif p['cancer'] == 'h&n':
-            procedure = 0.71
-        elif p['cancer'] == 'lung':
+        elif p['cancer_mdt'] == 'lung':
             procedure = 0.40
-        elif p['cancer'] == 'uterus':
+        elif p['cancer_mdt'] == 'gynaecological':
             procedure = 0.76
-        elif p['cancer'] == 'ovary':
-            procedure = 0.76
-        elif p['cancer'] == 'renal':
+        elif p['cancer_mdt'] == 'urological':
             procedure = -0.26
-        elif p['cancer'] == 'bladder':
-            procedure = -0.26
-        elif p['cancer'] == 'prostate':
-            procedure = -0.26
-        elif p['cancer'] == 'bowel':
+        elif p['cancer_mdt'] == 'lower_gi':
             procedure = 1.14
-        elif p['cancer'] == 'other':
-            procedure = 1.14
+        else:
+            procedure = 0.4
 
         x = -5.25 + age + functional + creatinine + procedure + asa
 
@@ -462,7 +457,7 @@ class Utilities:
         elif asa == 5:
             asaFive = 1
         
-        if p['cancer'][0] == 'lung' or p['cancer'][0] == 'bowel':
+        if p['cancer_site'] == 'lung' or p['cancer_site'] == 'colon' or p['cancer_site'] == 'rectal':
             highRiskSpecialty = 1
 
         if p['age'] > 80:
@@ -476,7 +471,9 @@ class Utilities:
 
         thirty_day = math.exp((-7.366 + risk_score)) / (1 + math.exp((-7.366 + risk_score)))
 
-        return thirty_day * 100
+        present = 1 if self.rng.random() < thirty_day else 0 
+
+        return thirty_day * 100, present
 
     # Calculate BMI
     def calculateBMI(self, h, w):

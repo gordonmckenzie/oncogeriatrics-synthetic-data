@@ -1221,7 +1221,7 @@ class PGM:
         #print(f"{'Model is okay' if homebound.check_model() else 'Model is incorrect'}")
 
         infer = VariableElimination(homebound)
-        q = infer.query(['Social isolation'], evidence={
+        q = infer.query(['Homebound'], evidence={
             'Depression': dep,
             'Social isolation': isol,
             'Using walking aid': aid,
@@ -1314,9 +1314,7 @@ class PGM:
 
         hasAnorexia = 1 if self.rng.random() < anorexia.values[0] else 0
 
-        return {
-            hasMalnutrition, hasWeightloss, hasAnorexia
-        }
+        return (hasMalnutrition, hasWeightloss, hasAnorexia)
 
     def inferChronicPain(self, band, gender, arthritis, osteo, copd, migraine, heart, pud, dm):
 
@@ -1502,9 +1500,11 @@ class PGM:
 
 ######------OUTCOMES--------######
 
-    def inferPostOpDelirium(self, hod, frailty, ckd, depression, badl, iadl, stroke, tia, currentSmoker, dm, htn, ihd, polypharmacy, ccf, vi):
+    def inferPostOpDelirium(self, hod, frailty, ckd, cognitive, depression, badl, iadl, stroke, tia, currentSmoker, dm, htn, ihd, polypharmacy, ccf, vi):
 
-        pod = BayesianModel([('History of delirium', 'Post-op delirium'), ('Frailty', 'Post-op delirium'), ('Cognitive impairment', 'Post-op delirium'), ('CKD', 'Post-op delirium'), ('Depression', 'Post-op delirium'), ('BADL impairment', 'Post-op delirium'), ('IADL impairment', 'Post-op delirium'), ('Stroke', 'Post-op delirium'), ('TIA', 'Post-op delirium'), ('Current smoker', 'Post-op delirium'), ('Diabetes', 'Post-op delirium'), ('Hypertension', 'Post-op delirium'), ('IHD', 'Post-op delirium'), ('Polypharmacy', 'Post-op delirium'), ('Heart failure', 'Post-op delirium'), ('Visual impairment', 'Post-op delirium')])
+        #pod = BayesianModel([('History of delirium', 'Post-op delirium'), ('Frailty', 'Post-op delirium'), ('Cognitive impairment', 'Post-op delirium'), ('CKD', 'Post-op delirium'), ('Depression', 'Post-op delirium'), ('BADL impairment', 'Post-op delirium'), ('IADL impairment', 'Post-op delirium'), ('Stroke', 'Post-op delirium'), ('TIA', 'Post-op delirium'), ('Current smoker', 'Post-op delirium'), ('Diabetes', 'Post-op delirium'), ('Hypertension', 'Post-op delirium'), ('IHD', 'Post-op delirium'), ('Polypharmacy', 'Post-op delirium'), ('Heart failure', 'Post-op delirium'), ('Visual impairment', 'Post-op delirium')])
+        
+        pod = BayesianModel([('History of delirium', 'Post-op delirium'), ('Frailty', 'Post-op delirium'), ('Cognitive impairment', 'Post-op delirium'), ('CKD', 'Post-op delirium'), ('Depression', 'Post-op delirium'), ('BADL impairment', 'Post-op delirium'), ('IADL impairment', 'Post-op delirium'), ('Stroke', 'Post-op delirium'), ('TIA', 'Post-op delirium'), ('Current smoker', 'Post-op delirium'), ('Visual impairment', 'Post-op delirium')])
 
         variables = [
             {'name': 'History of delirium', 'r': 6.4, 'type': 'OR'},
@@ -1517,15 +1517,15 @@ class PGM:
             {'name': 'Stroke', 'r': 2.1, 'type': 'OR'},
             {'name': 'TIA', 'r': 1.8, 'type': 'OR'},
             {'name': 'Current smoker', 'r': 1.8, 'type': 'OR'},
-            {'name': 'Diabetes', 'r': 1.4, 'type': 'OR'},
-            {'name': 'Hypertension', 'r': 1.3, 'type': 'OR'},
-            {'name': 'IHD', 'r': 1.2, 'type': 'OR'},
-            {'name': 'Polypharmacy', 'r': 1.4, 'type': 'OR'},
-            {'name': 'Heart failure', 'r': 1.4, 'type': 'OR'},
+            # {'name': 'Diabetes', 'r': 1.4, 'type': 'OR'},
+            # {'name': 'Hypertension', 'r': 1.3, 'type': 'OR'},
+            # {'name': 'IHD', 'r': 1.2, 'type': 'OR'},
+            # {'name': 'Polypharmacy', 'r': 1.4, 'type': 'OR'},
+            # {'name': 'Heart failure', 'r': 1.4, 'type': 'OR'},
             {'name': 'Visual impairment', 'r': 1.89, 'type': 'OR'},
         ]
 
-        bg_risk = 18.7 / 100
+        bg_risk = 0.187
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -1569,25 +1569,25 @@ class PGM:
                                 values=[[0],[1]],
                                 state_names={'Current smoker': ['Yes', 'No']})
 
-        cpd_k = TabularCPD(variable='Diabetes', variable_card=2,
-                                values=[[0],[1]],
-                                state_names={'Diabetes': ['Yes', 'No']})
+        # cpd_k = TabularCPD(variable='Diabetes', variable_card=2,
+        #                         values=[[0],[1]],
+        #                         state_names={'Diabetes': ['Yes', 'No']})
 
-        cpd_l = TabularCPD(variable='Hypertension', variable_card=2,
-                                values=[[0],[1]],
-                                state_names={'Hypertension': ['Yes', 'No']})
+        # cpd_l = TabularCPD(variable='Hypertension', variable_card=2,
+        #                         values=[[0],[1]],
+        #                         state_names={'Hypertension': ['Yes', 'No']})
 
-        cpd_m = TabularCPD(variable='IHD', variable_card=2,
-                                values=[[0],[1]],
-                                state_names={'IHD': ['Yes', 'No']})
+        # cpd_m = TabularCPD(variable='IHD', variable_card=2,
+        #                         values=[[0],[1]],
+        #                         state_names={'IHD': ['Yes', 'No']})
 
-        cpd_n = TabularCPD(variable='Polypharmacy', variable_card=2,
-                                values=[[0],[1]],
-                                state_names={'Polypharmacy': ['Yes', 'No']})      
+        # cpd_n = TabularCPD(variable='Polypharmacy', variable_card=2,
+        #                         values=[[0],[1]],
+        #                         state_names={'Polypharmacy': ['Yes', 'No']})      
 
-        cpd_o = TabularCPD(variable='Heart failure', variable_card=2,
-                                values=[[0],[1]],
-                                state_names={'Heart failure': ['Yes', 'No']})
+        # cpd_o = TabularCPD(variable='Heart failure', variable_card=2,
+        #                         values=[[0],[1]],
+        #                         state_names={'Heart failure': ['Yes', 'No']})
 
         cpd_p = TabularCPD(variable='Visual impairment', variable_card=2,
                                 values=[[0],[1]],
@@ -1595,49 +1595,54 @@ class PGM:
 
         cpd_pod = TabularCPD(variable='Post-op delirium', variable_card=2,
                         values=values,
-                        evidence=['History of delirium', 'Frailty', 'CKD', 'Depression', 'BADL impairment', 'IADL impairment', 'Stroke', 'TIA', 'Current smoker', 'Diabetes', 'Hypertension', 'Ischaemic heart disease', 'Polypharmacy', 'Heart failure', 'Visual impairment'],
-                        evidence_card=[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                        #evidence=['History of delirium', 'Frailty', 'CKD', 'Cognitive impairment', 'Depression', 'BADL impairment', 'IADL impairment', 'Stroke', 'TIA', 'Current smoker', 'Diabetes', 'Hypertension', 'IHD', 'Polypharmacy', 'Heart failure', 'Visual impairment'],
+                        evidence=['History of delirium', 'Frailty', 'CKD', 'Cognitive impairment', 'Depression', 'BADL impairment', 'IADL impairment', 'Stroke', 'TIA', 'Current smoker', 'Visual impairment'],
+                        #evidence_card=[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                        evidence_card=[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
                         state_names={'Post-op delirium': ['Yes', 'No'],
                                     'History of delirium':  ['No', 'Yes'],
                                     'Frailty': ['No', 'Yes'],
                                     'CKD': ['No', 'Yes'],
+                                    'Cognitive impairment': ['No', 'Yes'],
                                     'Depression': ['No', 'Yes'],
                                     'BADL impairment': ['No', 'Yes'],
                                     'IADL impairment': ['No', 'Yes'],
                                     'Stroke': ['No', 'Yes'],
                                     'TIA': ['No', 'Yes'],
                                     'Current smoker': ['No', 'Yes'],
-                                    'Diabetes': ['No', 'Yes'],
-                                    'Hypertension': ['No', 'Yes'],
-                                    'Ischaemic heart disease': ['No', 'Yes'],
-                                    'Polypharmacy': ['No', 'Yes'], 
-                                    'Heart failure': ['No', 'Yes'], 
+                                    # 'Diabetes': ['No', 'Yes'],
+                                    # 'Hypertension': ['No', 'Yes'],
+                                    # 'IHD': ['No', 'Yes'],
+                                    # 'Polypharmacy': ['No', 'Yes'], 
+                                    # 'Heart failure': ['No', 'Yes'], 
                                     'Visual impairment': ['No', 'Yes']
                             })           
 
 
         # Associating the parameters with the model structure.
-        pod.add_cpds(cpd_a,cpd_b,cpd_c,cpd_d,cpd_e,cpd_f,cpd_g, cpd_h, cpd_i, cpd_j, cpd_k, cpd_l, cpd_m, cpd_n, cpd_o, cpd_p, cpd_pod)
+        #pod.add_cpds(cpd_a,cpd_b,cpd_c,cpd_d,cpd_e,cpd_f,cpd_g, cpd_h, cpd_i, cpd_j, cpd_k, cpd_l, cpd_m, cpd_n, cpd_o, cpd_p, cpd_pod)
+        pod.add_cpds(cpd_a,cpd_b,cpd_c,cpd_d,cpd_e,cpd_f,cpd_g, cpd_h, cpd_i, cpd_j, cpd_p, cpd_pod)
 
         # Checking if the cpds are valid for the model.
-        #print(f"{'Model is okay' if fragility_fracture.check_model() else 'Model is incorrect'}")
+        #print(f"{'Model is okay' if pod.check_model() else 'Model is incorrect'}")
 
         infer = VariableElimination(pod)
         q = infer.query(['Post-op delirium'], evidence={
             'History of delirium': hod,
             'Frailty': frailty,
             'CKD': ckd,
+            'Cognitive impairment': cognitive,
             'Depression': depression,
             'BADL impairment': badl,
             'IADL impairment': iadl,
             'Stroke': stroke,
             'TIA': tia,
             'Current smoker': currentSmoker,
-            'Diabetes':dm,
-            'Hypertension': htn,
-            'Ischaemic heart disease': ihd,
-            'Polypharmacy': polypharmacy, 
-            'Heart failure': ccf, 
+            # 'Diabetes': dm,
+            # 'Hypertension': htn,
+            # 'IHD': ihd,
+            # 'Polypharmacy': polypharmacy, 
+            # 'Heart failure': ccf, 
             'Visual impairment': vi
             }, show_progress=False)
 
@@ -1655,7 +1660,7 @@ class PGM:
             {'name': 'AUD', 'r': 1.56, 'type': 'RR'},
         ]
 
-        bg_risk = 30 / 100
+        bg_risk = 0.30
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -1717,7 +1722,7 @@ class PGM:
             {'name': 'Current smoker', 'r': 1.33, 'type': 'OR'}
         ]
 
-        bg_risk = 88 / 100
+        bg_risk = 0.88
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -1762,7 +1767,7 @@ class PGM:
             {'name': 'AUD', 'r': 1.23, 'type': 'OR'}
         ]
 
-        bg_risk = 5.1 / 100
+        bg_risk = 0.051
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -1805,7 +1810,7 @@ class PGM:
 
     def inferPostOpSepsis(self, currentSmoker, frailty, aud, ccf, dm, ckd):
 
-        sepsis = BayesianModel([('Current smoker', 'Post-op sepsis'), ('Frailty', 'Post-op sepsis'), ('AUD', 'Post-op sepsis', ('Heart failure', 'Post-op sepsis'), ('Diabetes', 'Post-op sepsis'), ('CKD', 'Post-op sepsis'))])            
+        sepsis = BayesianModel([('Current smoker', 'Post-op sepsis'), ('Frailty', 'Post-op sepsis'), ('AUD', 'Post-op sepsis'), ('Heart failure', 'Post-op sepsis'), ('Diabetes', 'Post-op sepsis'), ('CKD', 'Post-op sepsis')])            
 
         variables = [
             {'name': 'Current smoker', 'r': 1.54, 'type': 'OR'},
@@ -1848,7 +1853,7 @@ class PGM:
                         values=values,
                         evidence=['Current smoker', 'Frailty', 'AUD', 'Heart failure', 'Diabetes', 'CKD'],
                         evidence_card=[2, 2, 2, 2, 2, 2],
-                        state_names={'Wound complications': ['Yes', 'No'],
+                        state_names={'Post-op sepsis': ['Yes', 'No'],
                                     'Current smoker':  ['No', 'Yes'],
                                     'Frailty': ['No', 'Yes'],
                                     'AUD': ['No', 'Yes'],
@@ -1909,9 +1914,9 @@ class PGM:
 
         cpd__a = TabularCPD(variable='Post-op pulmonary complications', variable_card=2,
                         values=values,
-                        evidence=['Current smoker', 'Frailty', 'AUD', 'Heart failure', 'Diabetes', 'CKD'],
+                        evidence=['Current smoker', 'Frailty', 'AUD', 'Heart failure'],
                         evidence_card=[2, 2, 2, 2],
-                        state_names={'Wound complications': ['Yes', 'No'],
+                        state_names={'Post-op pulmonary complications': ['Yes', 'No'],
                                     'Current smoker': ['No', 'Yes'],
                                     'Frailty': ['No', 'Yes'],
                                     'AUD': ['No', 'Yes'],
@@ -1944,7 +1949,7 @@ class PGM:
             {'name': 'Frailty', 'r': 3.41, 'type': 'OR'}
         ]
 
-        bg_risk = 0.32 / 100
+        bg_risk = 0.0032
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -1958,7 +1963,7 @@ class PGM:
 
         cpd__a = TabularCPD(variable='Post-op neurological complications', variable_card=2,
                         values=values,
-                        evidence=['Current smoker', 'Frailty', 'AUD', 'Heart failure', 'Diabetes', 'CKD'],
+                        evidence=['Current smoker', 'Frailty'],
                         evidence_card=[2, 2],
                         state_names={'Post-op neurological complications': ['Yes', 'No'],
                                     'Current smoker':  ['No', 'Yes'],
@@ -1991,7 +1996,7 @@ class PGM:
             {'name': 'CKD', 'r': 1.9, 'type': 'OR'}
         ]
 
-        bg_risk = 82.5 / 100
+        bg_risk = 0.825
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2017,7 +2022,7 @@ class PGM:
 
         cpd__a = TabularCPD(variable='No CPR outcome', variable_card=2,
                         values=values,
-                        evidence=['Age>70', 'Frailty', 'Age>75', 'Age>80', 'BADL impairment', 'CKD'],
+                        evidence=['Age>70', 'Age>75', 'Age>80', 'BADL impairment', 'CKD'],
                         evidence_card=[2, 2, 2, 2, 2],
                         state_names={'No CPR outcome': ['Yes', 'No'],
                                     'Age>70':  ['No', 'Yes'],
@@ -2046,7 +2051,7 @@ class PGM:
 
     def inferITUAdmission(self, currentSmoker, aud, anaemia, frailty, asa):
 
-        itu = BayesianModel([('Current smoker', 'Post-op ITU admission'), ('AUD', 'Post-op ITU admission'), ('Anaemia', 'Post-op ITU admission'), ('Frailty', 'Post-op ITU admission'), ('asa3', 'Post-op ITU admission'), ('asa4', 'Post-op ITU admission')])            
+        itu = BayesianModel([('Current smoker', 'Post-op ITU admission'), ('AUD', 'Post-op ITU admission'), ('Anaemia', 'Post-op ITU admission'), ('Frailty', 'Post-op ITU admission'), ('ASA3', 'Post-op ITU admission'), ('ASA4', 'Post-op ITU admission')])            
 
         variables = [
             {'name': 'Current smoker', 'r': 1.6, 'type': 'OR'},
@@ -2057,7 +2062,7 @@ class PGM:
             {'name': 'ASA4', 'r': 29.481, 'type': 'OR'},
         ]
 
-        bg_risk = 0.48 / 100
+        bg_risk = 0.0048 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5363100/
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2125,7 +2130,7 @@ class PGM:
             {'name': 'Polypharmacy', 'r': 3, 'type': 'OR'}
         ]
 
-        bg_risk = 51 / 100
+        bg_risk = 0.51
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2162,7 +2167,7 @@ class PGM:
 
     def inferIncreasedLOS(self, frailty, aud, disability, asa):
 
-        los = BayesianModel([('Frailty', 'Increased length of stay'), ('AUD', 'Increased length of stay'), ('Disability', 'Increased length of stay'), ('asa3', 'Increased length of stay'), ('asa4', 'Increased length of stay')])            
+        los = BayesianModel([('Frailty', 'Increased length of stay'), ('AUD', 'Increased length of stay'), ('Disability', 'Increased length of stay'), ('ASA3', 'Increased length of stay'), ('ASA4', 'Increased length of stay')])            
 
         variables = [
             {'name': 'Frailty', 'r': 2.78, 'type': 'OR'},
@@ -2172,7 +2177,7 @@ class PGM:
             {'name': 'ASA4', 'r': 3.34, 'type': 'OR'},
         ]
 
-        bg_risk = 34.2 / 100
+        bg_risk = 0.342
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2215,7 +2220,7 @@ class PGM:
         #print(f"{'Model is okay' if fragility_fracture.check_model() else 'Model is incorrect'}")
 
         infer = VariableElimination(los)
-        q = infer.query(['Post-op ITU admission'], evidence={
+        q = infer.query(['Increased length of stay'], evidence={
             'Frailty': frailty,
             'AUD': aud,
             'Disability': disability,
@@ -2233,7 +2238,7 @@ class PGM:
             {'name': 'IADL impairment', 'r': 2.87, 'type': 'OR'}
         ]
 
-        bg_risk = 20.1 / 100
+        bg_risk = 0.201
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2272,7 +2277,7 @@ class PGM:
             {'name': 'Diabetes', 'r': 1.32, 'type': 'OR'}
         ]
 
-        bg_risk = 10.7 / 100
+        bg_risk = 0.107
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2286,7 +2291,7 @@ class PGM:
 
         cpd__a = TabularCPD(variable='Neutropaenic events', variable_card=2,
                         values=values,
-                        evidence=['Current smoker', 'Frailty', 'AUD'],
+                        evidence=['Comorbidity', 'Diabetes'],
                         evidence_card=[2, 2],
                         state_names={'Neutropaenic events': ['Yes', 'No'],
                                     'Comorbidity':  ['No', 'Yes'],
@@ -2318,7 +2323,7 @@ class PGM:
             {'name': 'Difficulty walking outside', 'r': 3.6, 'type': 'OR'}
         ]
 
-        bg_risk = 10.7 / 100
+        bg_risk = 0.05
 
         values = self.calculateCPDTable(bg_risk, variables)
 
@@ -2341,7 +2346,7 @@ class PGM:
         cpd__a = TabularCPD(variable='Nursing home admission', variable_card=2,
                         values=values,
                         evidence=['Current smoker', 'Frailty', 'BADL impairment', 'Difficulty walking outside'],
-                        evidence_card=[2, 2, 2],
+                        evidence_card=[2, 2, 2, 2],
                         state_names={'Nursing home admission': ['Yes', 'No'],
                                     'Current smoker':  ['No', 'Yes'],
                                     'Frailty': ['No', 'Yes'],

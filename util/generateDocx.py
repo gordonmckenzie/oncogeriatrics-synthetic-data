@@ -36,10 +36,13 @@ def generateReport(analysis):
     row_cells = table.add_row().cells
     row_cells[0].text = 'Anthropometrics'
     row_cells[1].text = ''
-    for param,value in analysis.anthropometrics().items():
+    for param,value in analysis.anthropometrics():
         row_cells = table.add_row().cells
         row_cells[0].text = '        '+param
         row_cells[1].text = str(round(value, 1))
+    row_cells = table.add_row().cells
+    row_cells[0].text = 'Other'
+    row_cells[1].text = ''
     row_cells = table.add_row().cells
     row_cells[0].text = f'        Creatinine (mean, μmol/L)'
     row_cells[1].text = str(round(analysis.creatinineMean(), 1))
@@ -66,7 +69,7 @@ def generateReport(analysis):
         f"The eFI exhibited high sensitivity ({round(efi_accuracy['sensitivity'], 1)}%) for frailty compared to the gold standard Fried’s criteria, but low specificity ({round(efi_accuracy['specificity'], 1)}%) was observed with high negative predictive value ({round(efi_accuracy['negative_predictive_value'], 1)}%), meaning that an eFI below 0.13 was able to reliably exclude frailty in this synthetic oncogeriatric population."
     )
 
-    tug_accuracy = analysis.tugAccuracy()
+    tug_accuracy = analysis.tugAnalysis()
 
     document.add_paragraph(
         f"As expected from the reverse engineering of the TUG test diagnostic accuracy from an existing meta-analysis, this generally mirrored that expected with high sensitivity ({round(tug_accuracy['sensitivity'], 1)}%), reasonable specificity ({round(tug_accuracy['specificity'], 1)}%) and high negative predictive value ({round(tug_accuracy['negative_predictive_value'], 1)}%)."
@@ -89,10 +92,10 @@ def generateReport(analysis):
     hdr_cells = table.rows[0].cells
     hdr_cells[0].text = 'Outcome'
     hdr_cells[1].text = '% (95% CI)'
-    for s in analysis.outcomeStats():
+    for k,v in analysis.outcomeStats().items():
         row_cells = table.add_row().cells
-        row_cells[0].text = s[0]
-        row_cells[1].text = s[1]
+        row_cells[0].text = k
+        row_cells[1].text = v
 
     document.save(f'results/reports/{date}.docx')
 
