@@ -1,5 +1,6 @@
 import simpful as sf
 import numpy as np
+import os
 
 # # # May need to add in frailty
 
@@ -45,7 +46,9 @@ rules = [
     "IF (CVDs IS none) AND (Resp IS absent) AND (MSK IS present) AND (Cognitive IS absent) THEN (Mobility IS average)",
     "IF (CVDs IS none) AND (Resp IS absent) AND (MSK IS absent) AND (Cognitive IS present) THEN (Mobility IS average)",
     "IF (CVDs IS none) AND (Resp IS present) AND (MSK IS present) AND (Cognitive IS absent) THEN (Mobility IS poor)",
+    "IF (CVDs IS none) AND (Resp IS present) AND (MSK IS absent) AND (Cognitive IS present) THEN (Mobility IS poor)",
     "IF (CVDs IS none) AND (Resp IS absent) AND (MSK IS present) AND (Cognitive IS present) THEN (Mobility IS poor)",
+    "IF NOT(CVDs IS none) AND (Resp IS absent) AND (MSK IS present) AND (Cognitive IS present) THEN (Mobility IS poor)",
     "IF (CVDs IS two) AND (Resp IS absent) AND (MSK IS absent) AND (Cognitive IS absent) THEN (Mobility IS poor)",
     "IF (Resp IS present) AND (MSK IS absent) AND (Cognitive IS absent) AND (NOT(CVDs IS none)) THEN (Mobility IS poor)",
     "IF (Resp IS absent) AND (MSK IS present) AND (Cognitive IS absent) AND (NOT(CVDs IS none)) THEN (Mobility IS poor)",
@@ -61,7 +64,6 @@ fs.set_crisp_output_value("good", 30) # https://www.sciencedirect.com/science/ar
 
 def inferWalking(_cvds, _resp, _cog, _msk):
     _cvds = sum(_cvds)*2.5
-    _msk = sum(_msk)*(1/3)
     # Set antecedents values
     fs.set_variable("CVDs", _cvds)
     fs.set_variable("Resp", _resp)
@@ -72,6 +74,8 @@ def inferWalking(_cvds, _resp, _cog, _msk):
     infer = fs.Sugeno_inference(["Mobility"])["Mobility"]
 
     if infer == 0:
+        if not os.path.exists('issues'):
+            os.makedirs('issues')
         f = open("issues/issues.txt", "a")
         f.write(f"Results that made Sugeno 0 for walking.py CVDs:{_cvds},  Resp:{_resp}, Cognitive{_cog}, MSK: {_msk}\n\n")
         f.close()

@@ -256,10 +256,5 @@ def maleQRisk(
     score = 100.0 * (1 - pow(0.977268040180206, math.exp(a)))
     return score
 
-
-print(maleQRisk(80))
-
 ten_year_rate = -math.log(1-(maleQRisk(80)/100))
 one_year_prob = 1 - math.exp(-ten_year_rate * 1/10)
-
-print(one_year_prob)

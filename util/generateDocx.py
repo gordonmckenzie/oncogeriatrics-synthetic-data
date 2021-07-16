@@ -45,7 +45,7 @@ def generateReport(analysis):
     row_cells[1].text = ''
     row_cells = table.add_row().cells
     row_cells[0].text = f'        Creatinine (mean, μmol/L)'
-    row_cells[1].text = str(round(analysis.creatinineMean(), 1))
+    row_cells[1].text = str(round(analysis.creatinineMean()))
     row_cells = table.add_row().cells
     row_cells[0].text = f'        Self-reported health (mean, 1-4)'
     row_cells[1].text = str(round(analysis.srhMean(), 1))
@@ -63,16 +63,18 @@ def generateReport(analysis):
         row_cells[0].text = '        '+param.replace("_", " ").capitalize()
         row_cells[1].text = str(round(value, 1))
 
+    document.add_page_break()
+
     efi_accuracy = analysis.efiAccuracy()
 
     document.add_paragraph(
-        f"The eFI exhibited high sensitivity ({round(efi_accuracy['sensitivity'], 1)}%) for frailty compared to the gold standard Fried’s criteria, but low specificity ({round(efi_accuracy['specificity'], 1)}%) was observed with high negative predictive value ({round(efi_accuracy['negative_predictive_value'], 1)}%), meaning that an eFI below 0.13 was able to reliably exclude frailty in this synthetic oncogeriatric population."
+        f"The eFI exhibited high sensitivity ({round(efi_accuracy['sensitivity'], 1)*100}%) for frailty compared to the gold standard Fried’s criteria, but low specificity ({round(efi_accuracy['specificity'], 1)*100}%) was observed with high negative predictive value ({round(efi_accuracy['negative_predictive_value'], 1)*100}%), meaning that an eFI below 0.13 was able to reliably exclude frailty in this synthetic oncogeriatric population."
     )
 
     tug_accuracy = analysis.tugAnalysis()
 
     document.add_paragraph(
-        f"As expected from the reverse engineering of the TUG test diagnostic accuracy from an existing meta-analysis, this generally mirrored that expected with high sensitivity ({round(tug_accuracy['sensitivity'], 1)}%), reasonable specificity ({round(tug_accuracy['specificity'], 1)}%) and high negative predictive value ({round(tug_accuracy['negative_predictive_value'], 1)}%)."
+        f"As expected from the reverse engineering of the TUG test diagnostic accuracy from an existing meta-analysis, this generally mirrored that expected with high sensitivity ({round(tug_accuracy['sensitivity'], 1)*100}%), reasonable specificity ({round(tug_accuracy['specificity'], 1)*100}%) and high negative predictive value ({round(tug_accuracy['negative_predictive_value'], 1)*100}%)."
     )
 
     document.add_page_break()

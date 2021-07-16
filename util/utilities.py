@@ -335,7 +335,7 @@ class Utilities:
         elif score >= 12 and score < 20:
             risk = 89
 
-        present = 1 if self.rng.random() < risk else 0
+        present = 1 if self.rng.random() < risk/100 else 0
         
         return risk, score, present
 
@@ -429,7 +429,7 @@ class Utilities:
 
         x = -5.25 + age + functional + creatinine + procedure + asa
 
-        risk = (math.exp(x) / (1 + math.exp(x))) * 100
+        risk = (math.exp(x) / (1 + math.exp(x)))
 
         present = 1 if self.rng.random() < risk else 0 
 
@@ -473,7 +473,7 @@ class Utilities:
 
         present = 1 if self.rng.random() < thirty_day else 0 
 
-        return thirty_day * 100, present
+        return thirty_day, present
 
     # Calculate BMI
     def calculateBMI(self, h, w):

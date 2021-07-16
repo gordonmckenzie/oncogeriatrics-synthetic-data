@@ -1,4 +1,4 @@
-import yaml, random, time, sys
+import yaml, time
 import numpy as np
 import pandas as pd
 from util.terminal import Terminal
@@ -410,7 +410,7 @@ def generateSample():
                 ],
                 10 if (patient['copd'] == 1 or patient['asthma'] == 1) else 0,
                 10 if (patient['mci'] == 1 or patient['dementia'] == 1) else 0,
-                [patient['parkinsonsDisease'], patient['ra'], patient['arthritis']]
+                10 if (patient['parkinsonsDisease'] == 1 or patient['ra'] == 1 or patient['arthritis'] == 1) else 0
             ) if ['aerobicallyActive'] != 1 else 0
             
             # Assume majority (mobility aid users as a proportion of those with mobility difficulty) of patients with walking difficulty and all with frailty use a walking aid - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4311180/

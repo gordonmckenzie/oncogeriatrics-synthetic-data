@@ -64,40 +64,6 @@ class Analysis():
 
     def plotExpectedPrevalence(self):
 
-        # Create grouped horizontal bar plot with custom error bars using matplotlib styled with Seaborn
-        def grouped_barplot(df, cat, subcat, val, err1, err2):
-            plt.clf()
-            """
-            u = df[cat].unique()
-            y = np.arange(len(u))
-            subx = df[subcat].unique()
-            offsets = (np.arange(len(subx))-np.arange(len(subx)).mean())/(len(subx))
-            height = np.diff(offsets).mean()
-            for i,gr in enumerate(subx):
-                dfg = df[df[subcat] == gr]
-                plt.barh(y+offsets[i], dfg[val].values, height=height,
-                        label=gr, xerr=[dfg[err1].values, dfg[err2].values], capsize=2.)
-            plt.xlabel(val)
-            plt.ylabel(cat)
-            plt.yticks(y, u)
-            plt.legend()
-            plt.savefig(f"results/plots/prevalence_expected.png", bbox_inches='tight')
-            """
-            fig = go.Figure()
-            u = df[cat].unique()
-            y = np.arange(len(u))
-            subx = df[subcat].unique()
-            for _,gr in enumerate(subx):
-                dfg = df[df[subcat] == gr]
-                fig.add_trace(go.Bar(
-                    name=gr,
-                    x=dfg[val].values, y=y,
-                    orientation='h',
-                    error_x=dict(type='data', array=[dfg[err1].values, dfg[err2].values])
-                ))
-            fig.update_layout(barmode='group')
-            fig.write_image("results/plots/prevalence_expected.png")
-
         # Get all conditions from epidemiology.yaml and average by age
         conditions = []
 
@@ -120,6 +86,15 @@ class Analysis():
             return config['pretty-condition-strings'][key] if key in config['pretty-condition-strings'] else key
 
         # Iterate over all conditions 
+        fig = go.Figure()
+        x_expected = []
+        x_simulated = []
+        y_expected = []
+        y_simulated = []
+        err_expected = []
+        err_expected_minus = []
+        err_simulated = []
+        err_simulated_minus = []
         for key, value in groupby(conditions, key_func):
             if checkHasPrettyString(key):
                 vals_list = list(value)
@@ -128,34 +103,58 @@ class Analysis():
                     vals += float(v['value'])
                 mean = vals / len(vals_list)
                 ll, ul = sm.proportion_confint(vals, len(vals_list)*100, method='wilson')
-                data.append({"Type": "Expected", "Risk factor": getPrettyString(key), "Prevalence (%)": round(mean, 1), "ci_ll": ll, "ci_ul": ul})
-                data.append({"Type": "Simulated", "Risk factor": getPrettyString(key), "Prevalence (%)": round(self.pop[key].mean()*100, 1), "ci_ll": self.pop[key].quantile(0.025), "ci_ul": self.pop[key].quantile(0.975)})
-
-        data = pd.DataFrame(data)
-
-        cat = "Risk factor"
-        subcat = "Type"
-        val = "Prevalence (%)"
-        err1 = "ci_ll"
-        err2 = "ci_ul"
-        grouped_barplot(data, cat, subcat, val, err1, err2)
+                y_expected.append(getPrettyString(key))
+                y_simulated.append(getPrettyString(key))
+                x_expected.append(round(mean, 1))
+                x_simulated.append(round(self.pop[key].mean()*100, 1))
+                err_expected.append(ul)
+                err_expected_minus.append(ll)
+                err_simulated.append(self.pop[key].quantile(0.975))
+                err_simulated_minus.append(self.pop[key].quantile(0.025))
+              
+        fig.add_trace(go.Bar(
+            name='Expected',
+            y=y_expected, 
+            x=x_expected,
+            orientation='h',
+            error_x=dict(
+                type='data',
+                symmetric=False,
+                array=err_expected,
+                arrayminus=err_expected_minus)
+            )
+        )
+        fig.add_trace(go.Bar(
+            name='Simulated',
+            y=y_simulated, 
+            x=x_simulated,
+            orientation='h',
+            error_x=dict(
+                type='data',
+                symmetric=False,
+                array=err_simulated,
+                arrayminus=err_simulated_minus)
+            )
+        )
+        fig.update_layout(barmode='group', yaxis=dict(
+        title='Variable',
+        tickmode='linear'), xaxis=dict(
+        title='Prevalence (%)', automargin=True))
+        fig.write_image("results/plots/prevalence_expected.png")
 
     # Relationships between frailty, disability and multimorbidity...
     def FDM(self):
         plt.clf()
         df = self.pop
 
-        def getPercentage(v):
-            f"{round(v, 1)}%"
-
         venn3_unweighted(subsets = (
-            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 0)]) / len(df)), # D
-            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df)), # F
-            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df)), # DF
-            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df)), # M
-            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df)), # DM
-            getPercentage(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df)), # MF
-            getPercentage(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df)) # DFM
+            str(round(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 0)]) / len(df), 1)*100)+"%", # D
+            str(round(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df), 1)*100)+"%", # F
+            str(round(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 0) & (df['frailty'] == 1)]) / len(df), 1)*100)+"%", # DF
+            str(round(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df), 1)*100)+"%", # M
+            str(round(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 0)]) / len(df), 1)*100)+"%", # DM
+            str(round(len(df[(df['badlImpairment'] == 0) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df), 1)*100)+"%", # MF
+            str(round(len(df[(df['badlImpairment'] == 1) & (df['multimorbidity'] == 1) & (df['frailty'] == 1)]) / len(df), 1)*100)+"%" # DFM
         ), set_labels = ('Disability', 'Frailty', 'Multimorbidity'), set_colors=('grey', 'grey', 'grey', 'grey'), alpha = 0.5)
 
         plt.savefig(f"results/plots/fdm.png")
@@ -184,11 +183,11 @@ class Analysis():
         sensitivity = tp / (tp + fn)
         specificity = tn / (tn + fp)
         positive_likelihood = sensitivity / (1 - specificity)
-        negative_likelihood = (1 - sensitivity) / specificity
+        negative_likelihood = (1 - sensitivity) / specificity if specificity != 0 else 0
         false_positive_rate = 1 - specificity
         false_negative_rate = 1 - sensitivity
-        positive_predictive_value = tp / (tp + fp)
-        negative_predictive_value = tn / (tn + fn)
+        positive_predictive_value = tp / (tp + fp) if (tp + fp) != 0 else 0
+        negative_predictive_value = tn / (tn + fn) if (tn + fn) != 0 else 0
         precision = positive_predictive_value
         recall = sensitivity
         f1 = (2 * precision * recall) / (precision + recall)
@@ -208,27 +207,26 @@ class Analysis():
 
         return performance
 
-
     def efiMeans(self):
         return self.pop['efi_classification'].value_counts() / self.pop['efi_classification'].value_counts() * 100
 
     def efiAccuracy(self):
         df = self.pop
 
-        tp = df[(df['efi'] >= 0.13) & (df['frailty'] == 1)].count()
-        fn = df[(df['efi'] < 0.13) & (df['frailty'] == 1)].count()
-        fp = df[(df['efi'] >= 0.13) & (df['frailty'] == 0)].count()
-        tn = df[(df['efi'] < 0.13) & (df['frailty'] == 0)].count()
+        tp = len(df[(df['efi'] >= 0.13) & (df['frailty'] == 1)])
+        fn = len(df[(df['efi'] < 0.13) & (df['frailty'] == 1)])
+        fp = len(df[(df['efi'] >= 0.13) & (df['frailty'] == 0)])
+        tn = len(df[(df['efi'] < 0.13) & (df['frailty'] == 0)])
 
         return self.calculateAccuracy(tp, tn, fp, fn)
 
     def tugAnalysis(self):
         df = self.pop
 
-        tp = df[(df['tug'] >= 10) & (df['frailty'] == 1)].count()
-        fn = df[(df['tug'] < 10) & (df['frailty'] == 1)].count()
-        fp = df[(df['tug'] >= 10) & (df['frailty'] == 0)].count()
-        tn = df[(df['tug'] < 10) & (df['frailty'] == 0)].count()
+        tp = len(df[(df['tug'] >= 10) & (df['frailty'] == 1)])
+        fn = len(df[(df['tug'] < 10) & (df['frailty'] == 1)])
+        fp = len(df[(df['tug'] >= 10) & (df['frailty'] == 0)])
+        tn = len(df[(df['tug'] < 10) & (df['frailty'] == 0)])
 
         return self.calculateAccuracy(tp, tn, fp, fn)
 
@@ -240,6 +238,3 @@ class Analysis():
             outcomes[v] = f'{round(self.pop[k].mean(), 1) * 100} ({round(self.pop[k].quantile(0.025)) * 100}-{round(self.pop[k].quantile(0.975)) * 100})'
 
         return outcomes
-
-
-

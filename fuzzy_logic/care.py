@@ -1,5 +1,6 @@
 import simpful as sf
 import numpy as np
+import os
 
 rng = np.random.default_rng()
 
@@ -57,6 +58,8 @@ def inferCare(_age, _disability, _alone):
     infer = fs.Sugeno_inference(["Care"])["Care"]
 
     if infer == 0:
+        if not os.path.exists('issues'):
+            os.makedirs('issues')
         f = open("issues/issues.txt", "a")
         f.write(f"Results that made Sugeno 0 for care.py Age:{_age},  Disability:{_disability}, Alone:{_alone}\n\n")
         f.close()
