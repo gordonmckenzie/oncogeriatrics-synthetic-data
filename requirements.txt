@@ -25,6 +25,7 @@ fsspec==2021.7.0
 future==0.18.2
 h5py==3.3.0
 idna==2.10
+iniconfig==1.1.1
 ipydatawidgets==4.2.0
 ipykernel==6.0.2
 ipyleaflet==0.14.0
@@ -61,6 +62,7 @@ nest-asyncio==1.5.1
 networkx==2.5.1
 notebook==6.4.0
 numba==0.53.1
+numexpr==2.7.3
 numpy==1.21.0
 packaging==21.0
 pandas==1.2.5
@@ -73,10 +75,12 @@ pgmpy==0.1.15
 pickleshare==0.7.5
 Pillow==8.3.0
 plotly==5.1.0
+pluggy==0.13.1
 progressbar2==3.53.1
 prometheus-client==0.11.0
 prompt-toolkit==3.0.19
 ptyprocess==0.7.0
+py==1.10.0
 pyarrow==4.0.1
 pycparser==2.20
 pyerfa==2.0.0
@@ -84,6 +88,7 @@ pyfiglet==0.8.post1
 Pygments==2.9.0
 pyparsing==2.4.7
 pyrsistent==0.18.0
+pytest==6.2.4
 python-dateutil==2.8.1
 python-docx==0.8.11
 python-utils==2.5.6
@@ -99,11 +104,13 @@ Send2Trash==1.7.1
 simpful==2.4.5
 six==1.16.0
 statsmodels==0.12.2
+tables==3.6.1
 tabulate==0.8.9
 tenacity==8.0.1
 terminado==0.10.1
 testpath==0.5.0
 threadpoolctl==2.1.0
+toml==0.10.2
 toolz==0.11.1
 torch==1.9.0
 tornado==6.1
