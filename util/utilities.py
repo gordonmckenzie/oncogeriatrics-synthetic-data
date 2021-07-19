@@ -221,12 +221,15 @@ class Utilities:
 
         return 1 if mm_count > 1 else 0
 
+    # Looks for conditions/states that are highly likely to be associated with prescription
     def hasPolypharmacy(self, p):
         meds = 0
         prescribable = ['corticosteroids', 'antihypertensives', 'antipsychotics', 'af', 'arthritis', 'asthma', 'ed', 'luts', 'migraine', 'osteoporosis', 'pepticUlcer', 'thyroidDisease', 'bad', 'ctd', 'dementia', 't1dm', 't2dm', 'parkinsonsDisease', 'ra', 'sle', 'visualImpairment', 'depression', 'mi', 'angina', 'pvd', 'stroke', 'anaemia', 'copd', 'chronicPain', 'orthostaticHypotension', 'fragilityFracture']
         for v,b in p.items():
             if b == 1:
-                meds += 1 if (s == v for s in prescribable) else meds
+                for s in prescribable:
+                    if s == v:
+                        meds += 1 
 
         return 1 if meds >= 5 else 0
 
@@ -234,14 +237,11 @@ class Utilities:
     def calculateASA(self, p):
         asa = 1
 
-        hm = p['height'] / 100
-        bmi = round(p['weight'] / (hm * hm))
-
-        if bmi > 30 and bmi < 40:
+        if p['bmi'] > 30 and p['bmi'] < 40:
             asa = 2
 
         for rf, v in p.items():
-            if v == True:
+            if v == 1:
                 if rf == 'currentSmoker':
                     asa = 2
                 elif rf == 'drinksAlcohol':
@@ -277,7 +277,7 @@ class Utilities:
                 elif rf == 'difficultyWalkingOutside':
                     asa = 3
         
-        if bmi >= 40:
+        if p['bmi'] >= 40:
             asa = 3
 
         return asa
@@ -295,7 +295,7 @@ class Utilities:
             if hrc == cancer:
                 score += 2
         
-        if anaemia == True:
+        if anaemia == 1:
             score += 3
         
         if gender == 'f':
@@ -310,15 +310,15 @@ class Utilities:
         if crcl < 34:
             score += 3
         
-        if hearing == True:
+        if hearing == 1:
             score += 2
-        elif falls == True:
+        elif falls == 1:
             score += 3
-        elif medAssistance == True:
+        elif medAssistance == 1:
             score += 1
-        elif difficultyWalkingOutside == True:
+        elif difficultyWalkingOutside == 1:
             score += 3
-        elif decreasedSocialActivity == True:
+        elif decreasedSocialActivity == 1:
             score += 1
         
         risk = 0
@@ -345,7 +345,7 @@ class Utilities:
         deficits = {"activityLimitation": False, "anaemia": False, "arthritis": False, "af": False, "cvd": False, "ckd": False, "diabetes": False, "dizziness": False, "breathlessness": False, "falls": False, "footProblems": False, "fragilityFracture": False, "hearingLoss": False, "heartFailure": False, "heartValveDisease": False, "homebound": False, "hypertension": False, "hypotension": False, "heartDisease": False, "cognitive": False, "difficultyWalkingOutside": False, "osteoporosis": False, "parkinsonsDisease": False, "pepticUlcer": False, "pvd": False, "polypharmacy": False, "needsCare": False, "lungDisease": False, "ulcers": False, "sleepDisturbance": False, "socialVulnerability": False, "thyroidDisease": False, "urinaryIncontinence": False, "luts": False, "visualImpairment": False, "weightLossAndAnorexia": False }
 
         for v, b in p.items():
-            if b == True:
+            if b == 1:
                 if v == "badlImpairment" or v == "iadlImpairment":
                     deficits['activityLimitation'] = True
                 elif v == "mi" or v == "angina" or v == 'heartValveDisease':
@@ -360,7 +360,7 @@ class Utilities:
                     deficits['cognitive'] = True
                 elif v == "weightLoss" or v == "anorexia":
                     deficits['weightLossAndAnorexia'] = True
-                elif v == "stroke" or v == "tia":
+                elif v == "stroke" or v == "tia" or v == "angina" or v == "mi":
                     deficits['cvd'] = True
                 else:
                     for deficit,_ in deficits.items():
@@ -390,9 +390,9 @@ class Utilities:
     def calculateGupta(self, p):
         age = p['age'] * 0.02
         functional = 0
-        if p['iadlImpairment'] == True or p['badlImpairment'] == True:
+        if p['iadlImpairment'] == 1 or p['badlImpairment'] == 1:
             functional = 0.65
-            if p['needsCare'] == True:
+            if p['needsCare'] == 1:
                 functional = 1.03
         
         asa = self.calculateASA(p)
@@ -482,7 +482,7 @@ class Utilities:
         return round(bmi)
 
     # Calculate Suemoto index 10-year mortality risk
-    def calculateSuemoto(self, gender, age, diabetes, heartDisease, lungDisease, cancer, currentSmoker, formerSmoker, alcohol, height, weight, physicalActivity, bathing, walkBlock, date, selfReportedHealth):
+    def calculateSuemoto(self, gender, age, diabetes, heartDisease, lungDisease, cancer, currentSmoker, formerSmoker, alcohol, bmi, physicalActivity, bathing, walkBlock, date, selfReportedHealth):
         
         s10_m = 0.6905
         s10_f = 0.7636
@@ -506,8 +506,6 @@ class Utilities:
             age5 = True
         else:
             age6 = True
-
-        bmi = self.calculateBMI(height, weight)
 
         underWeight = False
         normalWeight = False
@@ -551,6 +549,7 @@ class Utilities:
             joint_hr = math.exp(male_sum if gender == 'm' else female_sum)
             risk = (1 - pow(s10_m if gender == 'm' else s10_f, joint_hr))
             excess = 0
+            
             if gender == 'm':
                 excess = 1 if risk > 0.458 else 0 # Baseline median relative survical all cancers (males)
             else:

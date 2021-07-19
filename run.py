@@ -120,8 +120,10 @@ def generateSample():
 
             # Assign minor root node co-morbidities
             for node in config['root-nodes-minor']:
-               patient[node] = u.getBernoulliSample(band['geriatricVulnerabilities'][node][gender] / 100)
-               patient['comorbidity_count'] += 1
+                diseaseState = u.getBernoulliSample(band['geriatricVulnerabilities'][node][gender] / 100)
+                patient[node] = diseaseState
+                if diseaseState == 1:
+                    patient['comorbidity_count'] += 1
 
             # Assign major root node co-morbidities
             for node in config['root-nodes-major']:
@@ -684,8 +686,7 @@ def generateSample():
                1 if patient['smoking'] == 0 else 0,
                1 if patient['smoking'] == 1 else 0,
                1 if patient['drinksAlcohol'] == 1 else 0,
-               patient['height'],
-               patient['weight'],
+               patient['bmi'],
                patient['aerobicallyActive'],
                patient['difficultyBathing'],
                patient['difficultyWalkingOutside'],

@@ -833,7 +833,7 @@ class PGM:
 
         syncope = BayesianModel([('Stroke', 'Syncope'), ('TIA', 'Syncope'), ('Hypertension', 'Syncope')])
 
-        bg_risk = band['geriatricVulnerabilities']['sleepDisturbance'][gender] / 100
+        bg_risk = band['geriatricVulnerabilities']['syncope'][gender] / 100
 
         variables = [{'name': 'Stroke', 'r': 2.56, 'll': 1.62, 'ul': 4.04, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/10801999/'}, {'name': 'TIA', 'r': 2.56, 'll': 1.62, 'ul': 4.04, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/10801999/'}, {'name': 'Hypertension', 'r': 1.46, 'll': 1.14, 'ul': 1.88, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/10801999/'}]
 
