@@ -6,9 +6,9 @@ import yaml
 from scipy.stats import bernoulli
 import vaex
 
-rng = np.random.default_rng()
+#rng = np.random.default_rng()
 
-df = pd.read_hdf('data/simulacrum.h5')
+#df = pd.read_hdf('data/simulacrum.h5')
 
 #age = 65
 #gender = 'm'
@@ -22,7 +22,9 @@ df = pd.read_hdf('data/simulacrum.h5')
 # df['deprivation'] = df['deprivation'].astype(int)
 # print(df['deprivation'].mean())
 
-print(df.groupby('age').mean())
+#print(df.groupby('age').mean())
+
+#df.to_csv('data/simulacrum.csv', index=False)
 
 
 #rng = np.random.default_rng()
@@ -120,3 +122,40 @@ array = {'mci': 'Mild cognitive impairment',
 for key, value in sorted(array.items()):
     print(f"'{key}': '{value}',")
 """
+
+import networkx as nx
+import matplotlib.pyplot as plt
+G=nx.DiGraph()
+# G.graph['rankdir'] = 'LR'
+# G.graph['dpi'] = 120
+variables = ["MVPA", "Frailty", "BADL\n impairment", "IADL\n impairment", "Homebound", "Angina", "Smoking"]
+negating_edges = [("MVPA", "Frailty"), ("MVPA", "BADL\n impairment"), ("MVPA", "IADL\n impairment"), ("MVPA", "Homebound"), ("MVPA", "Homebound"), ("MVPA", "Angina")]
+reducing_edges = [("MVPA", "Smoking")]
+#edges = negating_edges + reducing_edges
+#G.add_nodes_from(variables)
+#G.add_edges_from(edges)
+for v in variables:
+    G.add_node(v, shape='square')
+for ne in negating_edges:
+    options = {'color': 'red', 'widthA': 0., 'angleA': None, 'widthB':1.0, 'angleB':None}
+    G.add_edge(ne[0], ne[1], type="neg")
+for re in reducing_edges:
+    options = {'color':'red', 'style':'dashed'}
+    G.add_edge(re[0], re[1], type="red")
+
+e_neg = [(u, v) for (u, v, d) in G.edges(data=True) if d["type"] == "neg"]
+e_red = [(u, v) for (u, v, d) in G.edges(data=True) if d["type"] == "red"]
+
+pos = nx.spring_layout(G)
+
+nx.draw_networkx_nodes(G, pos,  node_color='#f5f6f7',
+        node_size=3000)
+
+nx.draw_networkx_edges(G, pos, edgelist=e_neg, arrowstyle='-[', edge_color='red')
+nx.draw_networkx_edges(G, pos, edgelist=e_red, style="dashed", edge_color='red')
+
+nx.draw_networkx_labels(G, pos, 
+        font_size=8, 
+        font_family="sans-serif")
+plt.axis("off")
+plt.show()
