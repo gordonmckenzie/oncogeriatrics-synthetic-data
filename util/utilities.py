@@ -337,7 +337,7 @@ class Utilities:
 
         present = 1 if self.rng.random() < risk/100 else 0
         
-        return risk, score, present
+        return risk/100, score, present
 
     # Calculate electronic Frailty Index score
     def calculateEFI(self, p):

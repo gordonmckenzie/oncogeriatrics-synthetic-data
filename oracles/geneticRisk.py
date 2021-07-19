@@ -30,4 +30,15 @@ def getGeneticRisk(gender):
 
     return genetic_profile
 
+# APOE
+# https://jnnp.bmj.com/content/75/6/828
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5360223/
+# https://n.neurology.org/content/92/15/e1745 - Family History of AD
 
+# SNPs and treatment
+# https://www.frontiersin.org/articles/10.3389/fonc.2020.541281/full
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5982750/
+
+# WGS secondary findings 
+# https://www.nature.com/articles/s41598-019-40571-0
+# https://www.ncbi.nlm.nih.gov/clinvar/docs/acmg/

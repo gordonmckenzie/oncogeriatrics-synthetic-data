@@ -24,7 +24,7 @@ import vaex
 
 #print(df.groupby('age').mean())
 
-#df.to_csv('data/simulacrum.csv', index=False)
+#df.to_csv('data/simulacrum.csv', index=0)
 
 
 #rng = np.random.default_rng()
@@ -68,8 +68,8 @@ for i, e in enumerate(epi):
 m = []
 f = []
 for e in epi:
-    m.append([e['geriatricVulnerabilities']['currentSmoker']['m']/100,round(e['geriatricVulnerabilities']['formerSmoker']['m']/100, 2), round(1-((e['geriatricVulnerabilities']['currentSmoker']['m']/100)+(e['geriatricVulnerabilities']['formerSmoker']['m']/100)),2)])
-    f.append([e['geriatricVulnerabilities']['currentSmoker']['f']/100,round(e['geriatricVulnerabilities']['formerSmoker']['f']/100, 2), round(1-((e['geriatricVulnerabilities']['currentSmoker']['f']/100)+(e['geriatricVulnerabilities']['formerSmoker']['f']/100)),2)])
+    m.append([e['currentSmoker']['m']/100,round(e['formerSmoker']['m']/100, 2), round(1-((e['currentSmoker']['m']/100)+(e['formerSmoker']['m']/100)),2)])
+    f.append([e['currentSmoker']['f']/100,round(e['formerSmoker']['f']/100, 2), round(1-((e['currentSmoker']['f']/100)+(e['formerSmoker']['f']/100)),2)])
 
 print(m,f)
 """
@@ -123,24 +123,23 @@ for key, value in sorted(array.items()):
     print(f"'{key}': '{value}',")
 """
 
+"""
 import networkx as nx
 import matplotlib.pyplot as plt
 G=nx.DiGraph()
 # G.graph['rankdir'] = 'LR'
 # G.graph['dpi'] = 120
 variables = ["MVPA", "Frailty", "BADL\n impairment", "IADL\n impairment", "Homebound", "Angina", "Smoking"]
-negating_edges = [("MVPA", "Frailty"), ("MVPA", "BADL\n impairment"), ("MVPA", "IADL\n impairment"), ("MVPA", "Homebound"), ("MVPA", "Homebound"), ("MVPA", "Angina")]
-reducing_edges = [("MVPA", "Smoking")]
+negating_edges = [("MVPA", "Frailty"), ("MVPA", "BADL\n impairment"), ("MVPA", "IADL\n impairment"), ("MVPA", "Homebound"), ("MVPA", "Angina"), ("MVPA", "Breathlessness"), ("MVPA", "Difficulty\n walking"), ("MVPA", "Malnutrition"), ("MVPA", "Needs care")]
+reducing_edges = [("MVPA", "Smoking"), ("MVPA", "10-year\n mortality")]
 #edges = negating_edges + reducing_edges
 #G.add_nodes_from(variables)
 #G.add_edges_from(edges)
 for v in variables:
     G.add_node(v, shape='square')
 for ne in negating_edges:
-    options = {'color': 'red', 'widthA': 0., 'angleA': None, 'widthB':1.0, 'angleB':None}
     G.add_edge(ne[0], ne[1], type="neg")
 for re in reducing_edges:
-    options = {'color':'red', 'style':'dashed'}
     G.add_edge(re[0], re[1], type="red")
 
 e_neg = [(u, v) for (u, v, d) in G.edges(data=True) if d["type"] == "neg"]
@@ -148,14 +147,241 @@ e_red = [(u, v) for (u, v, d) in G.edges(data=True) if d["type"] == "red"]
 
 pos = nx.spring_layout(G)
 
-nx.draw_networkx_nodes(G, pos,  node_color='#f5f6f7',
-        node_size=3000)
+nx.draw_networkx_edges(G, pos, 
+    edgelist=e_neg, 
+    width=6,
+    arrowstyle='-[', 
+    edge_color='red')
 
-nx.draw_networkx_edges(G, pos, edgelist=e_neg, arrowstyle='-[', edge_color='red')
-nx.draw_networkx_edges(G, pos, edgelist=e_red, style="dashed", edge_color='red')
+nx.draw_networkx_edges(G, pos, 
+    edgelist=e_red, 
+    style="dashed", 
+    edge_color='red')
+
+nx.draw_networkx_nodes(G, pos, 
+        node_color='#f5f6f7',
+        edgecolors="#666666",
+        node_size=3000)
 
 nx.draw_networkx_labels(G, pos, 
         font_size=8, 
         font_family="sans-serif")
+
 plt.axis("off")
+plt.tight_layout()
 plt.show()
+"""
+
+"""
+print('\nCGA domains....\n')
+counts = {}
+domains = {}
+fdm = {'frailty': 0, 'disability': 0, 'disability_multimorbidity': 0, 'disability_frailty': 0, 'disability_frailty_multimorbidity': 0, 'multimorbidity_frailty': 0, 'multimorbidity': 0 }
+df = pd.read_csv('/Users/gagmckenzie/Desktop/18-07-2021-18-56-39.csv')
+df = df.T.to_dict().values()
+for s in df:
+    if s['badlImpairment'] == 0 and s['multimorbidity'] == 0 and s['frailty'] == 1: 
+        fdm['frailty'] += 1
+    if s['badlImpairment'] == 1 and s['multimorbidity'] == 0 and s['frailty'] == 0: 
+        fdm['disability'] += 1
+    if s['badlImpairment'] == 1 and s['multimorbidity'] == 1 and s['frailty'] == 0: 
+        fdm['disability_multimorbidity'] += 1
+    if s['badlImpairment'] == 1 and s['multimorbidity'] == 0 and s['frailty'] == 1: 
+        fdm['disability_frailty'] += 1
+    if s['badlImpairment'] == 0 and s['multimorbidity'] == 1 and s['frailty'] == 1: 
+        fdm['multimorbidity_frailty'] += 1
+    if s['badlImpairment'] == 0 and s['multimorbidity'] == 1 and s['frailty'] == 0: 
+        fdm['multimorbidity'] += 1
+    if s['badlImpairment'] == 1 and s['multimorbidity'] == 1 and s['frailty'] == 1: #disability, multimorbidity and frailty present
+        fdm['disability_frailty_multimorbidity'] += 1
+
+
+print('\nRelationships between frailty, disability and multimorbidity...\n')
+for attribute, value in fdm.items():
+    print(f"{attribute.upper()} prevalence: {round(value / len(df) * 100, 2)} %")
+"""
+
+
+data = [
+{
+	"Type": "Lung",
+	"Prevalence": "15.8"
+},
+{
+	"Type": "Breast",
+	"Prevalence": "13.1"
+},
+{
+	"Type": "Colon",
+	"Prevalence": "10.2"
+},
+{
+	"Type": "Nhl",
+	"Prevalence": "6.5"
+},
+{
+	"Type": "Rectal",
+	"Prevalence": "5.5"
+},
+{
+	"Type": "Prostate",
+	"Prevalence": "5.2"
+},
+{
+	"Type": "Oesophageal",
+	"Prevalence": "4.8"
+},
+{
+	"Type": "Myeloma",
+	"Prevalence": "4.6"
+},
+{
+	"Type": "Leukaemia",
+	"Prevalence": "4"
+},
+{
+	"Type": "Bladder",
+	"Prevalence": "3.9"
+},
+{
+	"Type": "Stomach",
+	"Prevalence": "2.9"
+},
+{
+	"Type": "Ovarian",
+	"Prevalence": "2.8"
+},
+{
+	"Type": "Pancreatic",
+	"Prevalence": "2.7"
+},
+{
+	"Type": "Renal",
+	"Prevalence": "2.3"
+},
+{
+	"Type": "Mesothelioma",
+	"Prevalence": "2"
+},
+{
+	"Type": "Melanoma",
+	"Prevalence": "1.6"
+},
+{
+	"Type": "Brain",
+	"Prevalence": "1.5"
+},
+{
+	"Type": "Myeloproliferative",
+	"Prevalence": "1.3"
+},
+{
+	"Type": "Anal",
+	"Prevalence": "0.9"
+},
+{
+	"Type": "Uterine",
+	"Prevalence": "0.8"
+},
+{
+	"Type": "Sarcoma",
+	"Prevalence": "0.8"
+},
+{
+	"Type": "Pharyngeal",
+	"Prevalence": "0.7"
+},
+{
+	"Type": "Liver",
+	"Prevalence": "0.7"
+},
+{
+	"Type": "Hl",
+	"Prevalence": "0.7"
+},
+{
+	"Type": "Laryngeal",
+	"Prevalence": "0.6"
+},
+{
+	"Type": "Tonsil",
+	"Prevalence": "0.5"
+},
+{
+	"Type": "Biliary tract",
+	"Prevalence": "0.5"
+},
+{
+	"Type": "Cervical",
+	"Prevalence": "0.5"
+},
+{
+	"Type": "Intestinal",
+	"Prevalence": "0.5"
+},
+{
+	"Type": "Mouth",
+	"Prevalence": "0.4"
+},
+{
+	"Type": "B-cell lymphoma",
+	"Prevalence": "0.2"
+},
+{
+	"Type": "Tongue",
+	"Prevalence": "0.2"
+},
+{
+	"Type": "Sinonasal",
+	"Prevalence": "0.2"
+},
+{
+	"Type": "Nasopharyngeal",
+	"Prevalence": "0.2"
+},
+{
+	"Type": "Vulva",
+	"Prevalence": "0.2"
+},
+{
+	"Type": "Testicular",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Urological",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Gallbladder",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "T-cell lymphoma",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Thymus",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Bone",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Gynaecological",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Eye",
+	"Prevalence": "0.1"
+},
+{
+	"Type": "Thyroid",
+	"Prevalence": "0.1"
+}]
+
+import plotly.express as px
+
+fig = px.pie(data, values='Prevalence', names='Type')
+fig.update_traces(textposition='inside', textinfo='percent+label')
+fig.show()

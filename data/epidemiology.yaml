@@ -212,21 +212,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 5
       f: 10
@@ -452,21 +437,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 4
       f: 9
@@ -692,21 +662,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2.5
       f: 7
@@ -932,21 +887,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2
       f: 5
@@ -1172,21 +1112,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2
       f: 5
@@ -1412,21 +1337,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2
       f: 5
@@ -1652,21 +1562,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2
       f: 5
@@ -1892,21 +1787,6 @@
     tia:
       m: 7.9
       f: 7.9
-    severeWeightLoss:
-      m: 6
-      f: 6
-    exhaustion:
-      m: 19
-      f: 12
-    lowActivity:
-      m: 20
-      f: 20
-    slowWalk:
-      m: 20
-      f: 20
-    lowGripStrength:
-      m: 20
-      f: 20
     migraine: # https://pubmed.ncbi.nlm.nih.gov/1727198/
       m: 2
       f: 5

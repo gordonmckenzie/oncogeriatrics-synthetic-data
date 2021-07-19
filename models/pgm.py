@@ -35,6 +35,9 @@ class PGM:
     def calculateCPDTable(self, bg_risk, variables, approach="WEIGHTED"):
         table = []
 
+        if bg_risk < 0: # Check to ensure background risk has not become negative after adjustment
+            bg_risk = 0.01
+
         def transformRisk(v):
             if v["type"] == "RR":
                 return v["r"]
@@ -135,7 +138,7 @@ class PGM:
         # bg_risk = 0.14
         # approach = "WEIGHTED" # MAX_RISK
 
-        bg_risk = band['geriatricVulnerabilities']['ckd'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['ckd'][gender] / 100) - 0.14
 
         variables = [{'name': 'Diabetes', 'r': 3.09, 'll': 1.73, 'ul': 4.93, 'ciType': 95, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/27477292/'}, {'name': 'Obesity', 'r': 1.81, 'll': 1.52, 'ul': 2.16, 'ciType': 95, 'type': 'OR', 'ref': '#https://files.digital.nhs.uk/72/0EDBA2/HSE17-Adult-Child-BMI-tab-v2.xlsx, https://pubmed.ncbi.nlm.nih.gov/33656052/'}, {'name': 'Hypertension', 'r': 1.81, 'll': 1.39, 'ul': 2.6, 'ciType': 95, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/33238919/, https://pubmed.ncbi.nlm.nih.gov/27383068, https://bjgp.org/content/70/693/e285'}]
 
@@ -186,7 +189,7 @@ class PGM:
     def inferCOPD(self, band, gender, s, a):
         copd = BayesianModel([('Past smoking', 'COPD'), ('Current smoking', 'COPD'), ('Asthma', 'COPD')])
 
-        bg_risk = band['geriatricVulnerabilities']['copd'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['copd'][gender] / 100) - 10.7
 
         variables = [{'name': 'Past smoking', 'r': 2.89, 'll': 2.63, 'ul': 3.17, 'type': 'RR', 'ref': 'https://bmcpulmmed.biomedcentral.com/articles/10.1186/1471-2466-11-36'}, {'name': 'Current smoking', 'r': 3.51, 'll': 3.08, 'ul': 3.99, 'type': 'RR', 'ref': 'https://bmcpulmmed.biomedcentral.com/articles/10.1186/1471-2466-11-36'}, {'name': 'Asthma', 'r': 2.23, 'll': 1.36, 'ul': 3.66, 'type': 'OR', 'ref': 'https://thorax.bmj.com/content/70/9/822'}]
 
@@ -233,7 +236,7 @@ class PGM:
 
         #makeGraph(dizziness)
 
-        bg_risk = band['geriatricVulnerabilities']['dizziness'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['dizziness'][gender] / 100) - 0.065 # Reduce to account for baseline risk
 
         variables = [{'name': 'Female', 'r': 1.18, 'll': 1.05, 'ul': 1.32, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/32655479/'}, {'name': 'Osteoporosis', 'r': 2.49, 'll': 1.39, 'ul': 4.46, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/32655479/'}]
 
@@ -621,7 +624,7 @@ class PGM:
     def inferBadlDisability(self, band, gender, dm, bmi1, bmi2, f):
         badl_disability = BayesianModel([('Diabetes', 'BADL disability'), ('BMI > 30 < 35', 'BADL disability'), ('BMI >= 35.0 < 40', 'BADL disability'), ('Frailty', 'BADL disability')])
 
-        bg_risk = band['geriatricVulnerabilities']['badlImpairment'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['badlImpairment'][gender] / 100) - 0.12 # Correct for true prevalence
 
         variables = [{'name': 'Diabetes', 'r': 1.82, 'll': 1.4, 'ul': 2.36, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/24622316/'}, {'name': 'BMI > 30 < 35', 'r': 1.16, 'll': 1.11, 'ul': 1.21, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/22212629/'}, {'name': 'BMI >= 35.0 < 40', 'r': 1.16, 'll': 1.11, 'ul': 1.21, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/22212629/'}, {'name': 'Frailty', 'r': 2.76, 'll': 2.23, 'ul': 3.44, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/27558741/'}]
         
@@ -675,7 +678,7 @@ class PGM:
 
         depression = BayesianModel([('Frailty', 'Depression'), ('Osteoarthritis', 'Depression'), ('BADL Dependency', 'Depression'), ('Parkinsons disease', 'Depression'), ('Heart failure', 'Depression')])
 
-        bg_risk = band['geriatricVulnerabilities']['depression'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['depression'][gender] / 100) - 0.10
 
         variables = [{'name': 'Frailty', 'r': 2.64, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/28366616/'}, {'name': 'Osteoarthritis', 'r': 1.17, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/26795974/'}, {'name': 'BADL Dependency', 'r': 1.86, 'type': 'OR', 'ref': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3349051/'}, {'name': 'Parkinsons disease', 'r': 1.32, 'll': 1.16, 'ul': 1.44, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/15879342/'}, {'name': 'Heart failure', 'r': 1.676, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/34006389/'}]
 
@@ -759,7 +762,7 @@ class PGM:
 
     def inferSleepDisturbance(self, band, gender, dep, htn, hd, dm, pu, asthma, copd):
 
-        bg_risk = band['geriatricVulnerabilities']['sleepDisturbance'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['sleepDisturbance'][gender] / 100) - 0.2 # Reducing this slighty as very high baseline prevalence
 
         variables = [{'name': 'Depression', 'r': 1.72, 'll': 1.33, 'ul': 2.22, 'ciType': 95, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/28179129/'}, {'name': 'Hypertension', 'r': 1.5, 'll': 1.2, 'ul': 1.5, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}, {'name': 'Heart disease', 'r': 1.6, 'll': 1.2, 'ul': 2.3, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}, {'name': 'Diabetes', 'r': 1.4, 'll': 1.05, 'ul': 2, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}, {'name': 'Peptic ulcer', 'r': 2.1, 'll': 1.6, 'ul': 2.7, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}, {'name': 'Asthma', 'r': 1.6, 'll': 1.3, 'ul': 2, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}, {'name': 'COPD', 'r': 1.9, 'll': 1.5, 'ul': 2.5, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/21731135/'}]
 
@@ -881,7 +884,7 @@ class PGM:
 
         iadl_dependency = BayesianModel([('Frailty', 'IADL dependency'), ('Diabetes', 'IADL dependency'), ('Sleep disturbance', 'IADL dependency')])
 
-        bg_risk = band['geriatricVulnerabilities']['iadlImpairment'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['iadlImpairment'][gender] / 100) - 0.27
 
         variables = [{'name': 'Frailty', 'r': 3.62, 'll': 2.32, 'ul': 5.64, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/27558741/'}, {'name': 'Diabetes', 'r': 1.65, 'll': 1.55, 'ul': 1.74, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/24622316/'}, {'name': 'Sleep disturbance', 'r': 1.36, 'll': 1.11, 'ul': 1.68, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/29530908/'}]
 
@@ -1011,7 +1014,7 @@ class PGM:
     def inferFalls(self, band, gender, dw, diz, pd, oa, ui, oh, af, dep, fp):
         fall = BayesianModel([('Difficulty walking', 'Fall'), ('Dizziness', 'Fall'), ("Parkinsons disease", 'Fall'), ('Osteoarthritis', 'Fall'), ('Urinary incontinence', 'Fall'), ('Orthostatic hypotension', 'Fall'), ('Atrial fibrillation', 'Fall'), ('Depression', 'Fall'), ('Foot problems', 'Fall')])
 
-        bg_risk = band['geriatricVulnerabilities']['falls'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['falls'][gender] / 100) - 0.16 # Reduce to account for baseline risk
 
         variables = [{'name': 'Difficulty walking', 'r': 2.1, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/20585256/'}, {'name': 'Dizziness', 'r': 1.7, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/20585256/'}, {'name': "Parkinsons disease", 'r': 2.7, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/20585256/'}, {'name': 'Osteoarthritis', 'r': 1.33, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/34132007/'}, {'name': 'Urinary incontinence', 'r': 1.59, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/34010311/'}, {'name': 'Orthostatic hypotension', 'r': 1.73, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/30583909/'}, {'name': 'Atrial fibrillation', 'r': 1.19, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/32247342/'}, {'name': 'Depression', 'r': 4, 'll': 2.0, 'ul': 8.1, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/26234532/'}, {'name': 'Foot problems', 'r': 1.84, 'll': 1.07, 'ul': 3.0, 'ciType': 95, 'type': 'OR', 'ref': 'https://www.sciencedirect.com/science/article/pii/S0378512218305760?via%3Dihub'}]
 
@@ -1320,7 +1323,7 @@ class PGM:
 
         chronic_pain = BayesianModel([('Arthritis', 'Chronic pain'), ('Osteoporosis', 'Chronic pain'), ('COPD', 'Chronic pain'), ('Migraine', 'Chronic pain'), ('Heart disease', 'Chronic pain'), ('Peptic ulcer disease', 'Chronic pain'), ('Diabetes', 'Chronic pain')])
         
-        bg_risk = band['geriatricVulnerabilities']['chronicPain'][gender] / 100
+        bg_risk = (band['geriatricVulnerabilities']['chronicPain'][gender] / 100) - 0.138 # Reduce to account for true baseline
 
         variables = [
             {'name': 'Arthritis', 'r': 4.0, 'll': 3.4, 'ul': 4.6, 'ciType': 95, 'type': 'OR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/22071318/'}, 

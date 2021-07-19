@@ -118,6 +118,9 @@ def generateSample():
             patient['t1dm'] = 0
             patient['t2dm'] = 0 
 
+            # Factor to increase prevalence where aerobic activity negates variable
+            prevalenceUpliftFactor = (band['geriatricVulnerabilities']['aerobicallyActive'][gender] / 100) * 1.6
+
             # Assign minor root node co-morbidities
             for node in config['root-nodes-minor']:
                 diseaseState = u.getBernoulliSample(band['geriatricVulnerabilities'][node][gender] / 100)
@@ -130,7 +133,6 @@ def generateSample():
                 if node != 'diabetes':
                     patient[node] = 0 
                 if patient['aerobicallyActive'] == 0:
-                    prevalenceUpliftFactor = (band['geriatricVulnerabilities']['aerobicallyActive'][gender] / 100) * 1.6
                     # Subdivide diabetes
                     if node == 'diabetes':
                         diabetes = u.getBernoulliSample((band['geriatricVulnerabilities'][node][gender] / 100) / prevalenceUpliftFactor)
@@ -177,8 +179,20 @@ def generateSample():
 
             # Assign other variables randomly from distribution
             patient['incorrectDateReported'] = 1 if rng.random() < rng.choice(date_dist_m[index] if gender == 'm' else date_dist_f[index], 1)[0] else 0
-            smoking_status = list(rng.choice(smoking_m  if gender == 'm' else smoking_f))
-            patient['smoking'] = smoking_status.index(max(smoking_status))
+            
+            # Handle smoking in relation to lung cancer
+            smoking_status = list(rng.choice(smoking_m if gender == 'm' else smoking_f))
+            smoking = 0
+            if patient['cancer_type'] == 'lung':
+                # Remove the never smoker option in smoking multinomial
+                # https://pubmed.ncbi.nlm.nih.gov/33270100/
+                smoking = smoking_status.index(max(smoking_status[:-1])) if gender == 'm' and rng.random() < 0.9 else 2 
+                smoking = smoking_status.index(max(smoking_status[:-1])) if gender == 'f' and rng.random() < 0.84 else 2
+            else:
+                # Relationship with exercise is not clear
+                # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6369697/
+                smoking = smoking_status.index(max(smoking_status))
+            patient['smoking'] = smoking
 
             # Fix mutual exclusivity
             patient['mci'] = 0 if patient['dementia'] == 1 else patient['mci']
@@ -415,11 +429,14 @@ def generateSample():
                 10 if (patient['parkinsonsDisease'] == 1 or patient['ra'] == 1 or patient['arthritis'] == 1) else 0
             ) if ['aerobicallyActive'] != 1 else 0
             
-            # Assume majority (mobility aid users as a proportion of those with mobility difficulty) of patients with walking difficulty and all with frailty use a walking aid - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4311180/
+            # Assume majority (mobility aid users as a proportion of those with mobility difficulty) of patients with walking difficulty and all with frailty use a walking aid 
+            # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4311180/
             patient['usesWalkingAid'] = 1 if (((patient['difficultyWalking'] == 1 and rng.random() < 0.87) or patient['frailty']) and patient['aerobicallyActive'] != 1) else 0
 
-            # 48.4% of frail patients are limited to walk 100 yds (i.e. outside), whereas this is 5.68% in the non-frail group - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4311180/
-            patient['difficultyWalkingOutside'] = 1 if (((patient['frailty'] == 1 and rng.random() < 0.484) or rng.random() < 0.0568) and patient['aerobicallyActive'] != 1) else 0
+            # 48.4% of frail patients are limited to walk 100 yds (i.e. outside), 
+            # whereas this is 5.68% in the non-frail group (needs to be uplifted to acocunt for negation by aerobic activity) 
+            # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4311180/
+            patient['difficultyWalkingOutside'] = 1 if (((patient['frailty'] == 1 and rng.random() < 0.484) or rng.random() < (0.0568 * prevalenceUpliftFactor)) and patient['aerobicallyActive'] != 1) else 0
 
             ###--Probabilistic graphical modelling-###
             patient['falls'] = pgm.inferFalls(
@@ -527,7 +544,7 @@ def generateSample():
             if patient['frailty'] == 1:
                 if rng.random() < 0.93:
                     while tug < 10:
-                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2)
+                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10) # Add some extra random seconds
                     patient['tug'] = tug
                 else:
                     while tug > 10:
@@ -540,7 +557,7 @@ def generateSample():
                     patient['tug'] = tug
                 else:
                     while tug < 10:
-                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2)
+                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10) # Add some extra random seconds
                     patient['tug'] = tug
 
             patient['asa'] = u.calculateASA(patient)
@@ -730,9 +747,11 @@ def generateSample():
     # df.to_csv(f'results/data/{date}.csv', index=False)
     # sys.exit()
 
-generateSample()
-df = pd.DataFrame(pop)
-date = time.strftime("%d-%m-%Y-%H-%M-%S")
-df.to_csv(f'results/data/{date}.csv', index=False)
-analysis = Analysis(pop)
-generateReport(analysis)
+if __name__ == "__main__":
+    generateSample()
+    df = pd.DataFrame(pop)
+    date = time.strftime("%d-%m-%Y-%H-%M-%S")
+    df.to_csv(f'results/data/{date}.csv', index=False)
+    analysis = Analysis(pop)
+    filename = f"results/reports/{date}.docx"
+    generateReport(analysis, filename)
