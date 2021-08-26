@@ -1,6 +1,7 @@
 import networkx as nx
 import pylab as plt
 import numpy as np
+import pandas as pd
 import math, csv, itertools
 import scipy.stats as stats
 
@@ -224,7 +225,7 @@ class Utilities:
     # Looks for conditions/states that are highly likely to be associated with prescription
     def hasPolypharmacy(self, p):
         meds = 0
-        prescribable = ['corticosteroids', 'antihypertensives', 'antipsychotics', 'af', 'arthritis', 'asthma', 'ed', 'luts', 'migraine', 'osteoporosis', 'pepticUlcer', 'thyroidDisease', 'bad', 'ctd', 'dementia', 't1dm', 't2dm', 'parkinsonsDisease', 'ra', 'sle', 'visualImpairment', 'depression', 'mi', 'angina', 'pvd', 'stroke', 'anaemia', 'copd', 'chronicPain', 'orthostaticHypotension', 'fragilityFracture']
+        prescribable = ['corticosteroids', 'antihypertensives', 'antipsychotics', 'af', 'arthritis', 'asthma', 'ed', 'luts', 'migraine', 'osteoporosis', 'pepticUlcer', 'thyroidDisease', 'bad', 'ctd', 'dementia', 't1dm', 't2dm', 'parkinsonsDisease', 'ra', 'sle', 'visualImpairment', 'depression', 'mi', 'angina', 'pvd', 'stroke', 'anaemia', 'copd', 'chronicPain', 'orthostaticHypotension']
         for v,b in p.items():
             if b == 1:
                 for s in prescribable:
@@ -339,6 +340,27 @@ class Utilities:
         
         return risk/100, score, present
 
+    # Calculate Cambridge Mutlimorbidity score
+    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7004217/
+    def calculateCambridgeMultimorbidityScore(self, p):
+
+        consultations, admissions, mortality, general = 0,0,0,0
+
+        df = pd.read_csv(
+            'data/cambridge_multimorbidity_score.csv', 
+            header=0, 
+            names=['disease', 'consultations', 'admissions', 'mortality', 'general']
+        )
+        for v, b in p.items():
+            if b == 1:
+                if df['disease'].str.contains(v).any():
+                    consultations += df[df['disease'].str.contains(v)]['consultations'].values[0]
+                    admissions += df[df['disease'].str.contains(v)]['admissions'].values[0]
+                    mortality += df[df['disease'].str.contains(v)]['mortality'].values[0]
+                    general += df[df['disease'].str.contains(v)]['general'].values[0]
+
+        return consultations, admissions, mortality, general
+
     # Calculate electronic Frailty Index score
     def calculateEFI(self, p):
 
@@ -360,6 +382,8 @@ class Utilities:
                     deficits['cognitive'] = True
                 elif v == "weightLoss" or v == "anorexia":
                     deficits['weightLossAndAnorexia'] = True
+                elif v == "livesAlone" or v == "socialIsolation":
+                    deficits['socialVulnerability'] = True
                 elif v == "stroke" or v == "tia" or v == "angina" or v == "mi":
                     deficits['cvd'] = True
                 else:
@@ -392,8 +416,8 @@ class Utilities:
         functional = 0
         if p['iadlImpairment'] == 1 or p['badlImpairment'] == 1:
             functional = 0.65
-            if p['needsCare'] == 1:
-                functional = 1.03
+        if p['needsCare'] == 1:
+            functional = 1.03
         
         asa = self.calculateASA(p)
         if asa == 1:

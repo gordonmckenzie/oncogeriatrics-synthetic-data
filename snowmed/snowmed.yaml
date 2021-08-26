@@ -1,0 +1,242 @@
+# United Kingdom Edition v20210707
+---
+- sctid: 84114007
+  term: Heart failure (disorder)
+  abbr: heartFailure
+- sctid: 22298006
+  term: Myocardial infarction (disorder)
+  abbr: mi
+- sctid: 248279007
+  term: Frailty (finding)
+  abbr: frailty
+- sctid: 1084951000000107
+  term: Electronic Frailty Index (assessment scale) 
+  abbr: efi
+- sctid: 386805003
+  term: Mild cognitive disorder (disorder)
+  abbr: mci
+- sctid: 52448006
+  term: Dementia (disorder)
+  abbr: dementia
+- sctid: 16535771000119101
+  term: History of delirium (situation)
+  abbr: historyOfDelirium
+- sctid: 2492009
+  term: Nutritional disorder (disorder)
+  abbr: malnutrition
+- sctid: 35489007
+  term: Depressive disorder (disorder)
+  abbr: depression
+- sctid: 58214004
+  term: Schizophrenia (disorder)
+  abbr: schizohrenia
+- sctid: 13746004
+  term: Bipolar disorder (disorder)
+  abbr: bad
+- sctid: 161898004
+  term: Falls (finding) 
+  abbr: falls
+- sctid: 1094151000000108
+  term: Harmful use of alcohol (disorder)
+  abbr: aud
+- sctid: 301568007
+  term: Difficulty mobilizing outside (finding)
+  abbr: difficultyWalkingOutside
+- sctid: 301568007
+  term: Difficulty mobilizing outside (finding)
+  abbr: difficultyWalkingOutside
+- sctid: 15188001
+  term: Hearing loss (disorder)
+  abbr: hearingLoss
+- sctid: 870710001
+  term: Difficulty participating in community social life (finding)
+  abbr: decreasedSocialActivity
+- sctid: 271737000
+  term: Anemia (disorder)
+  abbr: anaemia
+- sctid: 709044004
+  term: Chronic kidney disease (disorder)
+  abbr: ckd
+- sctid: 73211009 
+  term: Diabetes mellitus (disorder)
+  abbr: diabetes
+- sctid: 46635009 
+  term: Diabetes mellitus type 1 (disorder)
+  abbr: t1dm
+- sctid: 44054006 
+  term: Diabetes mellitus type 2 (disorder)
+  abbr: t2dm
+- sctid: 219006 
+  term: Current drinker of alcohol (finding)
+  abbr: drinksAlcohol
+- sctid: 228448000 
+  term: Exercises regularly (finding)
+  abbr: aerobicallyActive
+- sctid: 3723001
+  term: Arthritis (disorder)
+  abbr: arthritis
+- sctid: 195967001
+  term: asthma
+  abbr: Asthma (disorder)
+- sctid: 13645005
+  term: Chronic obstructive lung disease (disorder)
+  abbr: copd
+- sctid: 49436004
+  term: Atrial fibrillation (disorder)
+  abbr: af
+- sctid: 230690007
+  term: Cerebrovascular accident (disorder)
+  abbr: stroke
+- sctid: 118932009 
+  term: Disorder of foot (disorder)
+  abbr: footDisorder
+- sctid: 306171000000106 
+  term: Fragility fracture (disorder)
+  abbr: fragilityFracture
+- sctid: 38341003
+  term: Hypertensive disorder, systemic arterial (disorder)
+  abbr: hypertension
+- sctid: 28651003
+  term: Orthostatic hypotension (disorder)
+  abbr: orthostaticHypotension
+- sctid: 271594007
+  term: Syncope (disorder)
+  abbr: syncope
+- sctid: 64859006
+  term: Osteoporosis (disorder)
+  abbr: osteoporosis
+- sctid: 49049000
+  term: Parkinson's disease (disorder)
+  abbr: parkinsonsDisease
+- sctid: 13200003 
+  term: Peptic ulcer (disorder)
+  abbr: pepticUlcer
+- sctid: 400047006
+  term: Peripheral vascular disease (disorder)
+  abbr: pvd
+- sctid: 46742003 
+  term: Skin ulcer (disorder)
+  abbr: ulcers
+- sctid: 14304000 
+  term: Disorder of thyroid gland (disorder)
+  abbr: thyroidDisease
+- sctid: 307541003
+  term: Lower urinary tract symptoms (finding)
+  abbr: luts
+- sctid:  404640003
+  term: Dizziness (finding)
+  abbr: dizziness
+- sctid: 267036007
+  term: Dyspnea (finding)
+  abbr: breathlessness
+- sctid: 129846003
+  term: Polypharmacy (finding)
+  abbr: polypharmacy
+- sctid: 44186003
+  term: Dyssomnia (disorder)
+  abbr: sleepDisturbance
+- sctid: 72042002
+  term: Incontinence of feces (finding)
+  abbr: faecalIncontinence
+- sctid: 165232002
+  term: Urinary incontinence (finding)
+  abbr: urinaryIncontinence
+- sctid: 89362005 
+  term: Weight loss (finding)
+  abbr: weightLoss
+- sctid: 228146008
+  term: Personal care impairment (finding)
+  abbr: badlImpairment
+- sctid: 406181009
+  term: 'Self-care assistance: instrumental activity of daily living (procedure)'
+  abbr: iadlImpairment
+- sctid: 160689007
+  term: Housebound (finding)
+  abbr: housebound
+- sctid: 397540003 
+  term: Visual impairment (disorder)
+  abbr: visualImpairment
+- sctid: 184156005
+  term: Has a caregiver (finding)
+  abbr: needsCare
+- sctid: 417430008
+  term: Vulnerable adult (finding)
+  abbr: sociallyVulnerable
+- sctid: 368009 
+  term: Heart valve disorder (disorder)
+  abbr: heartValveDisease
+- sctid: 194828000
+  term: Angina (disorder)
+  abbr: angina
+- sctid: 105969002
+  term: Disorder of connective tissue (disorder)
+  abbr: ctd
+- sctid: 69896004
+  term: Rheumatoid arthritis (disorder)
+  abbr: ra
+- sctid: 55464009
+  term: Systemic lupus erythematosus (disorder)
+  abbr: sle
+- sctid: 235856003
+  term: Disorder of liver (disorder) 
+  abbr: liverDisease
+- sctid: 266257000
+  term: Transient ischemic attack (disorder)
+  abbr: tia
+- sctid: 37796009
+  term: Migraine (disorder)
+  abbr: migraine
+- sctid: 860914002
+  term: Erectile dysfunction (disorder)
+  abbr: ed
+- sctid: 82423001 
+  term: Chronic pain (finding)
+  abbr: chronicPain
+- sctid: 105529008 
+  term: Lives alone (finding)
+  abbr: livesAlone
+- sctid: 134439009 
+  term: 'Family history: premature coronary heart disease (situation)'
+  abbr: fh_phd
+- sctid: 160313009
+  term: Family history of osteoporosis (situation)
+  abbr: fh_osteoporosis
+- sctid: 160303001
+  term: Family history of diabetes mellitus (situation)
+  abbr: fh_dm 
+- sctid: 397731000
+  term: Ethnic group finding (finding)
+  abbr: ethnicity
+- sctid: 77176002
+  term: Smoker (finding)
+  abbr: smoking
+- sctid: 77176002
+  term: Smoker (finding)
+  abbr: currentSmoker
+- sctid: 8517006
+  term: Ex-smoker (finding)
+  abbr: formerSmoker
+- sctid: 266919005
+  term: Never smoked tobacco (finding)
+  abbr: neverSmoker
+- sctid: 19657006
+  term: Disorientated in time (finding)
+  abbr: incorrectDateReported
+- sctid: 50582007 
+  term: Hemiplegia (disorder)
+  abbr: hemiplegia
+- sctid: 165251008 
+  term: Walking aid use (observable entity)
+  abbr: usesWalkingAid
+- sctid: 401269004
+  term: Fear of falling (finding)
+  abbr: fearOfFalling
+- sctid: 422650009
+  term: Social isolation (finding)
+  abbr: socialIsolation
+- sctid: 79890006   
+  term: Loss of appetite (finding)  
+  abbr: anorexia
+- sctid: 444680009 
+  term: Timed up and go mobility test score (observable entity)
+  abbr: tug   

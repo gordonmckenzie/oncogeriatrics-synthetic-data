@@ -3,6 +3,21 @@ pgm = PGM()
 
 class TestPGM():
 
+    def test_infer_decreased_social_activity(self):
+        result = pgm.inferDecreasedSocialActivity(
+            {'geriatricVulnerabilities': {'decreasedSocialActivity': {'f': 44, 'm': 44}}},
+            'f',
+            65,
+            0,
+            pgm.inferenceResult(0),
+            pgm.inferenceResult(0),
+            0
+        )
+
+        result = round(result, 2)
+
+        assert result == 0 or result == 1
+
     def test_infer_postop_pulm_comps(self):
         result,_ = pgm.inferPostOpPulmComps(
             pgm.inferenceResult(0),

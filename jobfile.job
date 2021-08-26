@@ -2,11 +2,10 @@
 #SBATCH -J OncoGeriSim
 #SBATCH -N 1
 #SBATCH --ntasks-per-node 12
-#SBATCH -D /home/544688/
-#SBATCH -o debug.out
-#SBATCH -e debug.err
+#SBATCH -D /home/544688/ogsim
+#SBATCH -o /home/544688/ogsim/debug.out
+#SBATCH -e /home/544688/ogsim/debug.err
 #SBATCH -p compute
-#SBATCH -t 01:00:00
 #SBATCH --mail-user=gordon.mckenzie@hyms.ac.uk
 #SBATCH --mail-type=ALL
 
@@ -14,10 +13,16 @@ echo $SLURM_JOB_NODELIST
 
 module purge
 module load python/anaconda/4.6/miniconda/3.7
+#module add gcc/8.2.0
+#module add openmpi/gcc/8.2.0
+# conda activate fast-mpi4py
+# export I_MPI_DEBUG=5
+# export I_MPI_FABRICS=shm:tmi
+# export I_MPI_FALLBACK=no
 
 source activate /home/544688/.conda/envs/ogsim
 source /home/544688/ogsim/bin/activate
-#export PATH=/home/544688/.conda/envs/ogsim/bin:${PATH}
+export PATH=/home/544688/ogsim/bin/python3:${PATH}
 
+# mpirun -mca pml cm -mca mtl psm2 python /home/544688/ogsim/mpi.py
 python /home/544688/ogsim/run.py
-

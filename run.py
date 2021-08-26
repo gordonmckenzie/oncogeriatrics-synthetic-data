@@ -5,35 +5,37 @@ from util.terminal import Terminal
 from util.generateDocx import generateReport
 from util.analysis import Analysis
 from util.utilities import Utilities
+from prescribing.prescriber import Prescriber
 from models.pgm import PGM
 from fuzzy_logic.walking import inferWalking
 from fuzzy_logic.care import inferCare
 from oracles.geneticRisk import getGeneticRisk
 from oracles.qrisk import maleQRisk, femaleQRisk
 
-# Initialise NumPy random number generator
-rng = np.random.default_rng()
-
-# Instantiate terminal utility class
-t = Terminal()
-
-t.logo() # Print banner
-
-# Load config file
-config = None
-with open("config.yaml", 'r') as stream:
-    config = yaml.safe_load(stream)
-
-# Instantiate general utility class and inject config
-u = Utilities(config)
-
-# Instantiate PGM models class
-pgm = PGM()
-
-# Set empty population list
-pop = []
-
 def generateSample():
+
+    # Initialise NumPy random number generator
+    rng: np.random = np.random.default_rng()
+
+    # Instantiate terminal utility class
+    t: Terminal = Terminal()
+
+    t.logo() # Print banner
+
+    # Load config file
+    config = None
+    with open("config.yaml", 'r') as stream:
+        config = yaml.safe_load(stream)
+
+    # Instantiate general utility class and inject config
+    u: Utilities = Utilities(config)
+
+    # Instantiate PGM models class
+    pgm = PGM()
+
+    # Set empty population list
+    pop = []
+
     t.print("Generating distributions...\n")
     t.initialiseProgressBar(total=7) # Progress bar starts, this number will change with sample size
         
@@ -97,7 +99,7 @@ def generateSample():
             ###----Cancer allocation----###
             # Query simulacrum database (pre-filtered, sanitised and annotated)
             q = df_sim[(df_sim.age == patient['age']) & (df_sim.gender == gender)]
-            if q.sample().empty == True: # Defense against the specific age and gender combination being in simulacrum
+            if q.sample().empty == True: # Defense against the specific age and gender combination not being in simulacrum
                 q = df_sim[(df_sim.age > patient['age']) & (df_sim.age < (patient['age'] + 5)) & (df_sim.gender == gender)]
             simulacrum_sample = q.sample(n = 1) # Random sample from DataFrame
             patient['ethnicity'] = simulacrum_sample['ethnicity'].values[0]
@@ -183,7 +185,7 @@ def generateSample():
             # Handle smoking in relation to lung cancer
             smoking_status = list(rng.choice(smoking_m if gender == 'm' else smoking_f))
             smoking = 0
-            if patient['cancer_type'] == 'lung':
+            if patient['cancer_site'] == 'lung':
                 # Remove the never smoker option in smoking multinomial
                 # https://pubmed.ncbi.nlm.nih.gov/33270100/
                 smoking = smoking_status.index(max(smoking_status[:-1])) if gender == 'm' and rng.random() < 0.9 else 2 
@@ -198,7 +200,7 @@ def generateSample():
             patient['mci'] = 0 if patient['dementia'] == 1 else patient['mci']
             patient['dementia'] = 0 if patient['mci'] == 1 else patient['dementia']
 
-            ###--Probabilistic graphical modelling--##
+            ###--Probabilistic graphical modelling--###
 
             patient['footProblems'] = pgm.inferFootProblems(
                 band,
@@ -304,6 +306,15 @@ def generateSample():
                 pgm.inferenceResult(patient['mi']),
                 pgm.inferenceResult(patient['af'])
             ) if ['aerobicallyActive'] != 1 else 0
+
+            if patient['heartFailure'] == 1:
+                # NYHA classification - https://pubmed.ncbi.nlm.nih.gov/11513906/
+                s = rng.dirichlet((0.47, 0.29, 0.07, 0.07, 0.10))
+                max = np.amax(s)
+                t = np.where(s == max)[0][0]
+                patient['heartFailureClassification'] = t+1
+            else:
+                patient['heartFailureClassification'] = 0
 
             # Chronic severe breathlessness mMRC >= 3
             if patient['copd'] == 1 or patient['heartFailure'] == 1:
@@ -504,8 +515,29 @@ def generateSample():
                 pgm.inferenceResult(patient['ra'])
             )
 
-            # This is very difficult to model
-            patient['socialVulnerability'] = 1 if (rng.random() < band['geriatricVulnerabilities']['socialVulnerability'][gender] and ['aerobicallyActive'] != 1)  else 0
+            major_health_condition = [
+                1 if (patient['t1dm'] == 1 or patient['t2dm'] == 1) else 0, 
+                1 if (patient['mi'] == 1 or patient['angina'] == 1 or patient['heartFailure'] == 1 or patient['af'] == 1) else 0, 
+                1 if (patient['copd'] == 1 or patient['asthma'] == 1) else 0
+            ]
+
+            def numerate_adls():
+                if patient['iadlImpairment'] == 1 and patient['badlImpairment'] == 1:
+                    return 2
+                elif patient['iadlImpairment'] == 1 or patient['badlImpairment'] == 1:
+                    return 1
+                else:
+                    return 0
+
+            patient['decreasedSocialActivity'] = pgm.inferDecreasedSocialActivity(
+                band,
+                gender,
+                patient['age'], #Pass raw age
+                np.count_nonzero(major_health_condition),
+                pgm.inferenceResult(patient['depression']),
+                pgm.inferenceResult(bool(patient['mci'] == 1 or patient['dementia'] == 1)),
+                numerate_adls()
+            )
 
             ###--Fuzzy logic----------------------###
             patient['needsCare'] = inferCare(
@@ -514,7 +546,11 @@ def generateSample():
                 10 if patient['livesAlone'] else 0
             ) if patient['aerobicallyActive'] != 1 else 0
 
-            patient['polypharmacy'] = u.hasPolypharmacy(patient)
+
+            prescriber = Prescriber(patient)
+            medications = prescriber.prescribe()
+
+            patient['polypharmacy'] = 1 if medications >= 5 else 0
 
             patient['multimorbidity'] = u.hasMultimorbidity(patient)
 
@@ -544,7 +580,7 @@ def generateSample():
             if patient['frailty'] == 1:
                 if rng.random() < 0.93:
                     while tug < 10:
-                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10) # Add some extra random seconds
+                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10)[0] # Add some extra random seconds
                     patient['tug'] = tug
                 else:
                     while tug > 10:
@@ -557,7 +593,7 @@ def generateSample():
                     patient['tug'] = tug
                 else:
                     while tug < 10:
-                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10) # Add some extra random seconds
+                        tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2) + rng.choice(1,10)[0] # Add some extra random seconds
                     patient['tug'] = tug
 
             patient['asa'] = u.calculateASA(patient)
@@ -676,7 +712,7 @@ def generateSample():
                 patient['falls'],
                 patient['medicationAssistance'],
                 patient['difficultyWalkingOutside'],
-                0 # Needs to calculate decreased social activity somehow - TODO
+                patient['decreasedSocialActivity'] 
             )
 
             patient['post_op_mace_risk'], patient['post_op_mace_present'] = u.calculateGupta(
@@ -746,9 +782,10 @@ def generateSample():
     # date = time.strftime("%d-%m-%Y-%H-%M-%S")
     # df.to_csv(f'results/data/{date}.csv', index=False)
     # sys.exit()
+    return pop
 
 if __name__ == "__main__":
-    generateSample()
+    pop = generateSample()
     df = pd.DataFrame(pop)
     date = time.strftime("%d-%m-%Y-%H-%M-%S")
     df.to_csv(f'results/data/{date}.csv', index=False)

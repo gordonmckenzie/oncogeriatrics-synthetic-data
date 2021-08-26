@@ -1501,6 +1501,89 @@ class PGM:
 
         return 1 if self.rng.random() < q.values[0] else 0
 
+    def inferDecreasedSocialActivity(self, band, gender, age, major_health_conditions, depression, cognitive, adls):
+        
+        activity_limitation = BayesianModel([('Age_1', 'Decreased social activity'), ('Age_2', 'Decreased social activity'), ('Major health conditions_1', 'Decreased social activity'),('Major health conditions_2', 'Decreased social activity'), ('Depression', 'Decreased social activity'), ('Cognitive', 'Decreased social activity'), ('Activity_1', 'Decreased social activity'), ('Activity_2', 'Decreased social activity')])
+
+        bg_risk = band['geriatricVulnerabilities']['decreasedSocialActivity'][gender] / 100
+
+        # https://pubmed.ncbi.nlm.nih.gov/17530446/
+        variables = [
+            {'name': 'Age_1', 'r': 1.2, 'type': 'OR'},
+            {'name': 'Age_2', 'r': 1.8, 'type': 'OR'},
+            {'name': 'Major health conditions_1', 'r': 1.2, 'type': 'OR'},
+            {'name': 'Major health conditions_2', 'r': 1.5, 'type': 'OR'},
+            {'name': 'Depression', 'r': 4.7, 'type': 'OR'},
+            {'name': 'Cognitive', 'r': 1.8, 'type': 'OR'},
+            {'name': 'Activity_1', 'r': 1.4, 'type': 'OR'},
+            {'name': 'Activity_2', 'r': 15.2, 'type': 'OR'}
+        ]
+
+        values = self.calculateCPDTable(bg_risk, variables)
+
+        cpd_a = TabularCPD(variable='Age_1', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Age_1': ['Yes', 'No']})
+
+        cpd_b = TabularCPD(variable='Age_2', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Age_2': ['Yes', 'No']})
+
+        cpd_c = TabularCPD(variable='Major health conditions_1', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Major health conditions_1': ['Yes', 'No']})
+
+        cpd_d = TabularCPD(variable='Major health conditions_2', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Major health conditions_2': ['Yes', 'No']})
+
+        cpd_e = TabularCPD(variable='Depression', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Depression': ['Yes', 'No']})
+
+        cpd_f = TabularCPD(variable='Cognitive', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Cognitive': ['Yes', 'No']})
+
+        cpd_g = TabularCPD(variable='Activity_1', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Activity_1': ['Yes', 'No']})
+
+        cpd_h = TabularCPD(variable='Activity_2', variable_card=2,
+                                values=[[0],[1]],
+                                state_names={'Activity_2': ['Yes', 'No']})
+
+        cpd__i = TabularCPD(variable='Decreased social activity', variable_card=2,
+                        values=values,
+                        evidence=['Age_1', 'Age_2', 'Major health conditions_1', 'Major health conditions_2', 'Depression', 'Cognitive', 'Activity_1', 'Activity_2'],
+                        evidence_card=[2, 2, 2, 2, 2, 2, 2, 2],
+                        state_names={'Decreased social activity': ['Yes', 'No'],
+                                    'Age_1': ['No', 'Yes'],
+                                    'Age_2': ['No', 'Yes'],
+                                    'Major health conditions_1': ['No', 'Yes'],
+                                    'Major health conditions_2': ['No', 'Yes'],
+                                    'Depression': ['No', 'Yes'],
+                                    'Cognitive': ['No', 'Yes'],
+                                    'Activity_1': ['No', 'Yes'],
+                                    'Activity_2': ['No', 'Yes']
+                        })
+
+        activity_limitation.add_cpds(cpd_a,cpd_b,cpd_c,cpd_d,cpd_e,cpd_f,cpd_g,cpd_h, cpd__i)
+
+        infer = VariableElimination(activity_limitation)
+        q = infer.query(['Decreased social activity'], evidence={
+            'Age_1': 'Yes' if age >= 70 and age < 80 else 'No',
+            'Age_2': 'Yes' if age >= 80 else 'No',
+            'Major health conditions_1': 'Yes' if major_health_conditions == 1 else 'No',
+            'Major health conditions_2': 'Yes' if major_health_conditions > 2 else 'No',
+            'Depression': depression,
+            'Cognitive': cognitive,
+            'Activity_1': 'Yes' if adls == 1 else 'No',
+            'Activity_2': 'Yes' if adls == 2 else 'No'
+            }, show_progress=False)
+
+        return 1 if self.rng.random() < q.values[0] else 0
+
 ######------OUTCOMES--------######
 
     def inferPostOpDelirium(self, hod, frailty, ckd, cognitive, depression, badl, iadl, stroke, tia, currentSmoker, dm, htn, ihd, polypharmacy, ccf, vi):
