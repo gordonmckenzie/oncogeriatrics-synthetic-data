@@ -17,5 +17,8 @@ test_pgm:
 test_prescribing:
 	PYTHONPATH=. pytest -v tests/test_prescribing.py::TestPrescribing --ignore=lib/ --capture=tee-sys
 
+test_MPI:
+	mpiexec --oversubscribe -np 4 python mpi.py
+
 run:
 	python run.py

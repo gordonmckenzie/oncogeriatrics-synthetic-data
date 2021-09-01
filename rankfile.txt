@@ -1,0 +1,4 @@
+rank 0=localhost slot=p0
+rank 1=localhost slot=p1
+rank 2=localhost slot=p2
+rank 3=localhost slot=p3

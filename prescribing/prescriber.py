@@ -1,14 +1,15 @@
 import numpy as np
-import sqlite3
+import csv
 from util.database import Database
 
 class Prescriber():
-    def __init__(self, patient, do_not_write_to_db = False):
+    def __init__(self, patient, do_not_write_to_db = False, write_to_csv=False):
         self.rng: np.random = np.random.default_rng()
         self.patient = patient
         self.meds = []
         self.db: Database = Database()
         self.do_not_write_to_db = do_not_write_to_db
+        self.write_to_csv = write_to_csv
 
     def flatten(self, meds):
         flattened_list = []
@@ -19,6 +20,11 @@ class Prescriber():
                 flattened_list.append(m)
         return flattened_list
 
+    def store_as_csv(self, id, agent, reason):
+        with open(f'results/data/prescribing.csv', 'a', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            csv_writer.writerow([id, agent, reason])
+
     def store(self, agent: str, reason: str, potential_duplicates: list, egfr=None):
         # First check not duplicated 
         if self.check_medications(potential_duplicates) == False:
@@ -28,6 +34,8 @@ class Prescriber():
             else:
                 if self.do_not_write_to_db == False:
                     self.db.insert_prescription(self.patient['id'], agent, reason)
+                if self.write_to_csv == True:
+                    self.store_as_csv(self.patient['id'], agent, reason)
                 self.meds.append(agent)
 
     def eGFR(self):

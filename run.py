@@ -1,4 +1,4 @@
-import yaml, time
+import yaml, time, uuid, os
 import numpy as np
 import pandas as pd
 from util.terminal import Terminal
@@ -12,7 +12,7 @@ from fuzzy_logic.care import inferCare
 from oracles.geneticRisk import getGeneticRisk
 from oracles.qrisk import maleQRisk, femaleQRisk
 
-def generateSample():
+def generateSample(env: str) -> list:
 
     # Initialise NumPy random number generator
     rng: np.random = np.random.default_rng()
@@ -31,7 +31,7 @@ def generateSample():
     u: Utilities = Utilities(config)
 
     # Instantiate PGM models class
-    pgm = PGM()
+    pgm: PGM = PGM()
 
     # Set empty population list
     pop = []
@@ -67,9 +67,13 @@ def generateSample():
     t.updateProgress()  
 
     ## Simulacrum
-    df_sim = pd.read_hdf('data/simulacrum.h5')
+    if env == "HPC": # If on High Performance Computer - cannot use h5, needs csv
+        df_sim = pd.read_csv('data/simulacrum.csv')
+    else:
+        df_sim = pd.read_hdf('data/simulacrum.h5')
 
-    id = 1 # Patient unique ID auto-increment
+    if env != "HPC":
+        id = 1 # Patient unique ID auto-increment
 
     t.print("\nGenerating patient samples...")
     t.initialiseProgressBar(total=1324) # Progress bar starts, this number will change with sample size
@@ -85,9 +89,15 @@ def generateSample():
             patient = {} # Empty individual patient dictionary
 
             ###----Age and gender allocation----###
-            patient['id'] = id # Unique ID
+            if env != "HPC":
+                patient['id'] = id # Unique ID
+            else:
+                patient['id'] = str(uuid.uuid4())
+            
             patient['age'] = rng.integers(band['ll'], band['ul']) # Randomly assign an age from band between lower and upper limit
+            
             gender = 'm' # Default as male
+            
             if rng.random() > config['chance-of-being-male']: # Randomly allocate to female depending on weighting
                 gender = 'f'
             patient['gender'] = gender
@@ -219,7 +229,7 @@ def generateSample():
                     gender,
                     patient['smoking'], # Pass raw multinomial value to ensure mutual exclusivity between current and past smoking
                     pgm.inferenceResult(patient['asthma'])
-                ) if ['aerobicallyActive'] != 1 else 0
+            ) if ['aerobicallyActive'] != 1 else 0
 
             patient['ckd'] = pgm.inferCKD(
                 band,
@@ -310,9 +320,9 @@ def generateSample():
             if patient['heartFailure'] == 1:
                 # NYHA classification - https://pubmed.ncbi.nlm.nih.gov/11513906/
                 s = rng.dirichlet((0.47, 0.29, 0.07, 0.07, 0.10))
-                max = np.amax(s)
-                t = np.where(s == max)[0][0]
-                patient['heartFailureClassification'] = t+1
+                max_value = np.amax(s)
+                classification_index = np.where(s == max_value)[0][0]
+                patient['heartFailureClassification'] = classification_index + 1
             else:
                 patient['heartFailureClassification'] = 0
 
@@ -546,14 +556,6 @@ def generateSample():
                 10 if patient['livesAlone'] else 0
             ) if patient['aerobicallyActive'] != 1 else 0
 
-
-            prescriber = Prescriber(patient)
-            medications = prescriber.prescribe()
-
-            patient['polypharmacy'] = 1 if medications >= 5 else 0
-
-            patient['multimorbidity'] = u.hasMultimorbidity(patient)
-
             ###--Assign creatinine level-----------###
             # Reduce creatinine clearance < 34 if has stage 3-5 CKD (this is therefore overestimated)
             if patient['ckd'] == 1:
@@ -565,6 +567,13 @@ def generateSample():
                 patient['cr'] = cr
             else: # Assign normal ageing creatinine
                 patient['cr'] = round(np.random.choice(cr_dist_m[index], 1)[0]) if gender == 'm' else round(np.random.choice(cr_dist_f[index], 1)[0])
+
+            prescriber = Prescriber(patient, do_not_write_to_db=True if env == "HPC" else False, write_to_csv=True if env == "HPC" else False)
+            medications = prescriber.prescribe()
+
+            patient['polypharmacy'] = 1 if medications >= 5 else 0
+
+            patient['multimorbidity'] = u.hasMultimorbidity(patient)
 
             ###--Assign self-reported health-------###
             self_reported_health = round(rng.choice(srh_dist_m[index] if gender == 'm' else srh_dist_f[index], 1)[0])
@@ -775,7 +784,8 @@ def generateSample():
             
             # Update counter, ID and progress bar
             i += 1
-            id += 1
+            if env != "HPC":
+                id += 1
             t.updateProgress()
 
     # df = pd.DataFrame(pop)
@@ -789,6 +799,7 @@ if __name__ == "__main__":
     df = pd.DataFrame(pop)
     date = time.strftime("%d-%m-%Y-%H-%M-%S")
     df.to_csv(f'results/data/{date}.csv', index=False)
+    os.rename('data/prescribing.csv', f'data/prescribing-{date}.csv')
     analysis = Analysis(pop)
     filename = f"results/reports/{date}.docx"
     generateReport(analysis, filename)
