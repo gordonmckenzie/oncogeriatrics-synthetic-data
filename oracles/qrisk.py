@@ -3,6 +3,29 @@ import numpy as np
 
 rng = np.random.default_rng()
 
+def map_ethnicity(ethnicity):
+    # Unknown, White, Indian, Pakistani, Bangladeshi, Other Asian, Black Carribean, Black African, Chinese, Other ethnic group
+    if ethnicity == "WHITE":
+        return 1
+    elif ethnicity == "INDIAN":
+        return 2
+    elif ethnicity == "PAKISTANI":
+        return 3
+    elif ethnicity == "BANGLADESHI":
+        return 4
+    elif ethnicity == "OTHER ASIAN":
+        return 5
+    elif ethnicity == "BLACK CARRIBEAN":
+        return 6
+    elif ethnicity == "BLACK AFRICAN":
+        return 7
+    elif ethnicity == "CHINESE":
+        return 8
+    elif ethnicity == "OTHER ETHNIC GROUP":
+        return 9
+    else: 
+        return 0
+
 def femaleQRisk(
     age,
     b_AF=0,
@@ -19,7 +42,7 @@ def femaleQRisk(
     fh_cvd=0,
     smoke_cat=2,
     b_corticosteroids=0,
-    ethrisk=0,
+    ethnicity="UNKNOWN",
     rati=4,
     sbp=125,
     sbps5=-2,
@@ -49,6 +72,8 @@ def femaleQRisk(
 
     # Start of Sum 
     a=0
+
+    ethrisk = map_ethnicity(ethnicity)
 
     # The conditional sums 
     if smoke_cat == 2:
@@ -142,7 +167,7 @@ def maleQRisk(
     fh_cvd=0,
     smoke_cat=2,
     b_corticosteroids=0,
-    ethrisk=0,
+    ethnicity="UNKNOWN",
     rati=4,
     sbp=125,
     sbps5=0,
@@ -176,6 +201,8 @@ def maleQRisk(
 
     # Start of Sum 
     a=0
+
+    ethrisk = map_ethnicity(ethnicity)
 
     # The conditional sums 
     if smoke_cat == 2:
@@ -256,5 +283,5 @@ def maleQRisk(
     score = 100.0 * (1 - pow(0.977268040180206, math.exp(a)))
     return score
 
-ten_year_rate = -math.log(1-(maleQRisk(80)/100))
-one_year_prob = 1 - math.exp(-ten_year_rate * 1/10)
+# ten_year_rate = -math.log(1-(maleQRisk(80)/100))
+# one_year_prob = 1 - math.exp(-ten_year_rate * 1/10)

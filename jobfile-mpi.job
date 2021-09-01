@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J OncoGeriSim
-#SBATCH -N 1
+#SBATCH -N 10
 #SBATCH --ntasks-per-node 12
 #SBATCH -D /home/544688/ogsim
 #SBATCH -o /home/544688/ogsim/debug.out
@@ -13,9 +13,10 @@ echo $SLURM_JOB_NODELIST
 
 module purge
 module load python/anaconda/4.6/miniconda/3.7
+module load openmpi/3.0.0
 
 source activate /home/544688/.conda/envs/ogsim
 source /home/544688/ogsim/bin/activate
 export PATH=/home/544688/ogsim/bin/python3:${PATH}
 
-python /home/544688/ogsim/run.py
+mpirun python /home/544688/ogsim/mpi.py

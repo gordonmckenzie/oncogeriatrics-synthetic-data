@@ -20,5 +20,8 @@ test_prescribing:
 test_MPI:
 	mpiexec --oversubscribe -np 4 python mpi.py
 
+test_oracles:
+	PYTHONPATH=. pytest -v tests/test_oracles.py::TestOracles --ignore=lib/ --capture=tee-sys
+
 run:
 	python run.py

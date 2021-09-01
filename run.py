@@ -255,12 +255,12 @@ def generateSample(env: str) -> list:
                 patient['age']-10, patient['af'], patient['antipsychotics'], patient['migraine'], patient['ra'], 
                 patient['ckd'], 1 if (patient['schizophrenia'] == 1 or patient['bad'] == 1) else 0,
                 patient['sle'], patient['antihypertensives'], patient['t1dm'], patient['t2dm'], bmi, genetic_profile['fh_phd'], patient['smoking'],
-                patient['corticosteroids']
+                patient['corticosteroids'], ethnicity=patient['ethnicity'], town=patient['deprivation']
             ) if gender == 'f' else maleQRisk(
                 patient['age']-10, patient['af'], patient['antipsychotics'], patient['migraine'], patient['ra'], 
                 patient['ckd'], 1 if (patient['schizophrenia'] == 1 or patient['bad'] == 1) else 0,
                 patient['sle'], patient['antihypertensives'], patient['t1dm'], patient['t2dm'], patient['ed'], bmi, genetic_profile['fh_phd'], patient['smoking'],
-                patient['corticosteroids']
+                patient['corticosteroids'], ethnicity=patient['ethnicity'], town=patient['deprivation']
             )
     
             patient['tia'], patient['stroke'], patient['mi'], patient['angina'] = 0,0,0,0
