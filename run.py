@@ -49,16 +49,16 @@ def generateSample(env: str) -> list:
     weight_dist_m, weight_dist_f = u.createNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['weight-stats-m'], config['weight-stats-f'])
     t.updateProgress()   
     height_dist_m, height_dist_f = u.createNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['height-stats-m'], config['height-stats-f'])
-    t.updateProgress()   
-    srh_dist_m, srh_dist_f = u.createNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['self-reported-health-stats-m'], config['self-reported-health-stats-f'])
-    t.updateProgress()   
+    t.updateProgress()     
     cr_dist_m, cr_dist_f = u.createNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['cr-stats-m'], config['cr-stats-f'])
     t.updateProgress()   
     tug_dist_m, tug_dist_f = u.createNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['tug-stats'], config['tug-stats'])
     t.updateProgress()   
 
     ## Truncated normal
-    date_dist_m, date_dist_f = u.createTruncatedNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['date-report-stats-m'], config['date-report-stats-f'])
+    date_dist_m, date_dist_f = u.createTruncatedNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['date-report-stats-m'], config['date-report-stats-f'], 0, 1)
+    t.updateProgress()  
+    srh_dist_m, srh_dist_f = u.createTruncatedNormalDistribution(config['sample-size'], config['chance-of-being-male'], config['self-reported-health-stats-m'], config['self-reported-health-stats-f'], 1, 5)
     t.updateProgress()  
 
     ## Multinomial
@@ -573,10 +573,8 @@ def generateSample(env: str) -> list:
             patient['multimorbidity'] = u.hasMultimorbidity(patient)
 
             ###--Assign self-reported health-------###
-            self_reported_health = round(rng.choice(srh_dist_m[index] if gender == 'm' else srh_dist_f[index], 1)[0])
-            # This could potentially be fuzzy logic or PGM
-            self_reported_health = rng.integers([3,4])[0] if patient['aerobicallyActive'] == 1 and self_reported_health < 3 and rng.random() > 0.7 else self_reported_health
-            patient['self_reported_health'] = round(self_reported_health)
+            baseline_srh = round(rng.choice(srh_dist_m[index] if gender == 'm' else srh_dist_f[index], 1)[0])
+            patient['self_reported_health'] = u.calculateSelfReportedHealth(baseline_srh, patient)
 
             # Assign electronic Frailty Index (eFI)
             patient['efi'], patient['efi_classification'] = u.calculateEFI(patient)

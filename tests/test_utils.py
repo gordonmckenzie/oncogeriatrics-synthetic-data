@@ -1,5 +1,6 @@
 import yaml
 import pandas as pd
+import numpy as np
 from util.utilities import Utilities
 
 pop = pd.read_csv('tests/test_data.csv')
@@ -22,3 +23,11 @@ class TestUtils():
         p = pop.iloc[[0]].to_dict('index')
         d = u.reportsDateIncorrectly(0.25, p[0]) # 0.25 rough estimate of baseline
         assert d == 1 or d == 0 
+    
+    def test_self_reported_health(self):
+        p = pop.iloc[[0]].to_dict('index')[0]
+        srh_dist = []
+        baseline = 2
+        for _ in range(1,5000):
+            srh_dist.append(u.calculateSelfReportedHealth(baseline, p))
+        assert min(srh_dist) == 1 and max(srh_dist) == 4

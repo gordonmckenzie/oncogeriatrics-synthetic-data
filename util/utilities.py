@@ -105,14 +105,14 @@ class Utilities:
 
         return stats.bernoulli.rvs(1 if stat > 1 else stat, size=1)[0]
 
-    def createTruncatedNormalDistribution(self, n, chanceOfBeingMale, stats_m, stats_f):
+    def createTruncatedNormalDistribution(self, n, chanceOfBeingMale, stats_m, stats_f, clip_a, clip_b):
         dist_m = []
         dist_f = []
         for stat in stats_m:
-            dist = stats.truncnorm((0 - stat[0]) / stat[1], (1 - stat[0]) / stat[1], loc=stat[0], scale=stat[1])
+            dist = stats.truncnorm((clip_a - stat[0]) / stat[1], (clip_b - stat[0]) / stat[1], loc=stat[0], scale=stat[1])
             dist_m.append(dist.rvs(round(n*chanceOfBeingMale * 100)))
         for stat in stats_f:
-            dist = stats.truncnorm((0 - stat[0]) / stat[1], (1 - stat[0]) / stat[1], loc=stat[0], scale=stat[1])
+            dist = stats.truncnorm((clip_a - stat[0]) / stat[1], (clip_b - stat[0]) / stat[1], loc=stat[0], scale=stat[1])
             dist_f.append(dist.rvs(round(n * (1- chanceOfBeingMale) * 100)))
 
         return dist_m, dist_f
@@ -248,6 +248,17 @@ class Utilities:
 
         return self.rng.binomial(1, p=risk)
 
+    def calculateSelfReportedHealth(self, baseline, patient):
+        self_reported_health = baseline
+        self_reported_health = self.rng.integers(3,5) if patient['aerobicallyActive'] == 1 and self_reported_health < 3 and self.rng.random() > 0.7 else self_reported_health
+        # https://bmcgeriatr.biomedcentral.com/articles/10.1186/1471-2318-13-85
+        while self_reported_health >= 3:
+            self_reported_health = self.rng.integers(1,3) if patient['stroke'] == 1 and self.rng.random() < 0.38 else self_reported_health # Stroke
+            self_reported_health = self.rng.integers(1,3) if patient['iadlImpairment'] == 1 and self.rng.random() < 0.45 else self_reported_health # IADL
+            self_reported_health = self.rng.integers(1,3) if patient['badlImpairment'] == 1 and self.rng.random() < 0.5 else self_reported_health # ADL
+            break
+        
+        return round(self_reported_health)
 
     # Attempts to classify the ASA Physical Status Classification System
     def calculateASA(self, p):
