@@ -188,9 +188,6 @@ def generateSample(env: str) -> list:
             patient['height'] = height
             patient['weight'] = weight
             patient['bmi'] = bmi
-
-            # Assign other variables randomly from distribution
-            patient['incorrectDateReported'] = 1 if rng.random() < rng.choice(date_dist_m[index] if gender == 'm' else date_dist_f[index], 1)[0] else 0
             
             # Handle smoking in relation to lung cancer
             smoking_status = list(rng.choice(smoking_m if gender == 'm' else smoking_f))
@@ -583,6 +580,10 @@ def generateSample(env: str) -> list:
 
             # Assign electronic Frailty Index (eFI)
             patient['efi'], patient['efi_classification'] = u.calculateEFI(patient)
+
+            # Assign incorrect date reported
+            baseline_temporal_orientation = rng.choice(date_dist_m[index] if gender == 'm' else date_dist_f[index], 1)[0]
+            patient['incorrectDateReported'] = u.reportsDateIncorrectly(patient,  1 - baseline_temporal_orientation) # Must be 1 - because this represents chance of reporting correctly
 
             # Assign Timed-Up-and-Go (TUG) test value according to known diagnostic accuracy
             tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2)

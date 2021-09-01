@@ -17,3 +17,8 @@ class TestUtils():
         p = pop.iloc[[0]].to_dict('index')
         c,a,m,g = u.calculateCambridgeMultimorbidityScore(p[0])
         assert 0 not in [c,a,m,g]
+    
+    def test_incorrect_date(self):
+        p = pop.iloc[[0]].to_dict('index')
+        d = u.reportsDateIncorrectly(0.25, p[0]) # 0.25 rough estimate of baseline
+        assert d == 1 or d == 0 

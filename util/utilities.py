@@ -222,17 +222,32 @@ class Utilities:
 
         return 1 if mm_count > 1 else 0
 
-    # Looks for conditions/states that are highly likely to be associated with prescription
-    def hasPolypharmacy(self, p):
-        meds = 0
-        prescribable = ['corticosteroids', 'antihypertensives', 'antipsychotics', 'af', 'arthritis', 'asthma', 'ed', 'luts', 'migraine', 'osteoporosis', 'pepticUlcer', 'thyroidDisease', 'bad', 'ctd', 'dementia', 't1dm', 't2dm', 'parkinsonsDisease', 'ra', 'sle', 'visualImpairment', 'depression', 'mi', 'angina', 'pvd', 'stroke', 'anaemia', 'copd', 'chronicPain', 'orthostaticHypotension']
-        for v,b in p.items():
-            if b == 1:
-                for s in prescribable:
-                    if s == v:
-                        meds += 1 
+    # Works out risk of temporal disorientation
+    def reportsDateIncorrectly(self, baseline, p):
+        ad = [0.7272, 0.7419, 0.7949, 0.8]
+        pd = [0.16, 0.1571, 0.3333, 0.3333]
+        age_band = 0
+        if p['age'] >= 70 and p['age'] < 75:
+            age_band = 1
+        elif p['age'] >= 75 and p['age'] < 80:
+            age_band = 2
+        elif p['age'] >= 80:
+            age_band = 3
+        
+        risk_profile = []
+        
+        # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8345456/
+        risk_profile.append(self.rng.choice([0.177, 0.035, 0.105, 0.1, 0.041], 1)[0] if p['mci'] == 1 else baseline)
+        risk_profile.append(self.rng.choice([0.16, 0.033, 0.08, 0.054, 0.023], 1)[0] if p['depression'] == 1 else baseline)
 
-        return 1 if meds >= 5 else 0
+        # https://www.longdom.org/open-access/temporal-disorientation-base-rates-in-alzheimers-disease-and-parkinsonsdisease-2167-7182-1000221.pdf
+        risk_profile.append(pd[age_band] if p['parkinsonsDisease'] == 1 else baseline)
+        risk_profile.append(ad[age_band] if p['dementia'] == 1 else baseline)
+
+        risk = max(risk_profile)
+
+        return self.rng.binomial(1, p=risk)
+
 
     # Attempts to classify the ASA Physical Status Classification System
     def calculateASA(self, p):
