@@ -581,7 +581,7 @@ def generateSample(env: str) -> list:
 
             # Assign incorrect date reported
             baseline_temporal_orientation = rng.choice(date_dist_m[index] if gender == 'm' else date_dist_f[index], 1)[0]
-            patient['incorrectDateReported'] = u.reportsDateIncorrectly(patient,  1 - baseline_temporal_orientation) # Must be 1 - because this represents chance of reporting correctly
+            patient['incorrectDateReported'] = u.reportsDateIncorrectly(1 - baseline_temporal_orientation, patient) # Must be 1 - because this represents chance of reporting correctly
 
             # Assign Timed-Up-and-Go (TUG) test value according to known diagnostic accuracy
             tug = round(rng.choice(tug_dist_m[index] if gender == 'm' else tug_dist_f[index], 1)[0], 2)
