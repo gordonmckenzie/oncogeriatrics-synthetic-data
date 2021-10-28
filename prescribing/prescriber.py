@@ -3,8 +3,8 @@ import csv
 from util.database import Database
 
 class Prescriber():
-    def __init__(self, patient, do_not_write_to_db = False, write_to_csv=False):
-        self.rng: np.random = np.random.default_rng()
+    def __init__(self, patient, rng, do_not_write_to_db = False, write_to_csv=False):
+        self.rng: np.random = rng
         self.patient = patient
         self.meds = []
         self.db: Database = Database()

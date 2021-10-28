@@ -6,8 +6,8 @@ import math, csv, itertools
 import scipy.stats as stats
 
 class Utilities:
-    def __init__(self, config):
-        self.rng = np.random.default_rng()
+    def __init__(self, config, rng):
+        self.rng: np.random = rng
         self.config = config
 
     # Sets the demographic labels

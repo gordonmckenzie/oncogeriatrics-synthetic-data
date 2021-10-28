@@ -7,10 +7,10 @@ from util.analysis import Analysis
 from util.utilities import Utilities
 from prescribing.prescriber import Prescriber
 from models.pgm import PGM
-from fuzzy_logic.walking import inferWalking
-from fuzzy_logic.care import inferCare
-from oracles.geneticRisk import getGeneticRisk
-from oracles.qrisk import maleQRisk, femaleQRisk
+from fuzzy_logic.walking import FuzzyWalking
+from fuzzy_logic.care import FuzzyCare
+from oracles.geneticRisk import GeneticRisk
+from oracles.qrisk import QRisk
 
 def generateSample(env: str) -> list:
 
@@ -27,17 +27,17 @@ def generateSample(env: str) -> list:
     with open("config.yaml", 'r') as stream:
         config = yaml.safe_load(stream)
 
-    # Instantiate general utility class and inject config
-    u: Utilities = Utilities(config)
+    # Instantiate general utility class and inject config and rng
+    u: Utilities = Utilities(config, rng)
 
-    # Instantiate PGM models class
-    pgm: PGM = PGM()
+    # Instantiate PGM models class and inject rng
+    pgm: PGM = PGM(rng)
 
     # Set empty population list
     pop = []
 
     t.print("Generating distributions...\n")
-    t.initialiseProgressBar(total=7) # Progress bar starts, this number will change with sample size
+    t.initialiseProgressBar(total=7) # Progress bar starts
         
     # Load age distribution epidemiology
     age_dists = []
@@ -104,7 +104,8 @@ def generateSample(env: str) -> list:
 
             ###----Get genetic profile----------###
             # For internal use only (not presented in data)
-            genetic_profile = getGeneticRisk(gender)
+            genetic_risk = GeneticRisk(rng)
+            genetic_profile = genetic_risk.getGeneticRisk(gender)
         
             ###----Cancer allocation----###
             # Query simulacrum database (pre-filtered, sanitised and annotated)
@@ -242,6 +243,14 @@ def generateSample(env: str) -> list:
                 pgm.inferenceResult(patient['ckd'])
             )
 
+            # 45% chronic disease - https://pubmed.ncbi.nlm.nih.gov/1612458/
+            # 30% iron deficienct
+            # 10% B12/folate deficiency
+            # 15% uncertain
+            if patient['anaemia'] == 1:
+                cause = rng.choice(['acd', 'ida', 'b12', 'folate', 'uncertain'], 1, p=[0.45, 0.3, 0.05, 0.05, 0.15])[0]
+                patient['anaemiaCause'] = cause
+
             ###--Add medications---------------------##
             # https://pubmed.ncbi.nlm.nih.gov/23299113/,https://pubmed.ncbi.nlm.nih.gov/16035128/, https://www.tandfonline.com/doi/full/10.1080/08039488.2020.1854853
             patient['antipsychotics'] = 1 if (patient['dementia'] == 1 and rng.random() < 0.074) or (patient['schizophrenia'] == 1 and rng.random() < 0.75) else 0 
@@ -251,12 +260,13 @@ def generateSample(env: str) -> list:
             patient['corticosteroids'] = 1 if ((patient['copd'] == 1 and rng.random() < 0.18) or (patient['ra'] == 1 and rng.random() < 0.35)) else 0
 
             ###--Cardiovascular risk oracle--------##
-            qrisk = femaleQRisk(
+            cv_risk = QRisk(rng)
+            qrisk = cv_risk.femaleQRisk(
                 patient['age']-10, patient['af'], patient['antipsychotics'], patient['migraine'], patient['ra'], 
                 patient['ckd'], 1 if (patient['schizophrenia'] == 1 or patient['bad'] == 1) else 0,
                 patient['sle'], patient['antihypertensives'], patient['t1dm'], patient['t2dm'], bmi, genetic_profile['fh_phd'], patient['smoking'],
                 patient['corticosteroids'], ethnicity=patient['ethnicity'], town=patient['deprivation']
-            ) if gender == 'f' else maleQRisk(
+            ) if gender == 'f' else cv_risk.maleQRisk(
                 patient['age']-10, patient['af'], patient['antipsychotics'], patient['migraine'], patient['ra'], 
                 patient['ckd'], 1 if (patient['schizophrenia'] == 1 or patient['bad'] == 1) else 0,
                 patient['sle'], patient['antihypertensives'], patient['t1dm'], patient['t2dm'], patient['ed'], bmi, genetic_profile['fh_phd'], patient['smoking'],
@@ -435,7 +445,8 @@ def generateSample(env: str) -> list:
             )
 
             ###--Fuzzy logic----------------------###
-            patient['difficultyWalking'] = inferWalking(
+            fuzzy_walking = FuzzyWalking(rng)
+            patient['difficultyWalking'] = fuzzy_walking.inferWalking(
                 [
                     1 if (patient['tia'] == 1 or patient['stroke'] == 1) else 0, 
                     1 if (patient['mi'] == 1 or patient['angina'] == 1) else 0, 
@@ -547,7 +558,8 @@ def generateSample(env: str) -> list:
             )
 
             ###--Fuzzy logic----------------------###
-            patient['needsCare'] = inferCare(
+            fuzzy_care = FuzzyCare(rng)
+            patient['needsCare'] = fuzzy_care.inferCare(
                 patient['age'],
                 10 if patient['badlImpairment'] == 1 else 5 if (patient['iadlImpairment'] == 1 and patient['badlImpairment'] == 0) else 0,
                 10 if patient['livesAlone'] else 0
@@ -556,16 +568,16 @@ def generateSample(env: str) -> list:
             ###--Assign creatinine level-----------###
             # Reduce creatinine clearance < 34 if has stage 3-5 CKD (this is therefore overestimated)
             if patient['ckd'] == 1:
-                cr = round(np.random.choice(cr_dist_m[index], 1)[0]) if gender == 'm' else round(np.random.choice(cr_dist_f[index], 1)[0])
+                cr = round(rng.choice(cr_dist_m[index], 1)[0]) if gender == 'm' else round(rng.choice(cr_dist_f[index], 1)[0])
                 crcl = u.calculateCrCl(patient['height'], patient['weight'], patient['age'], gender, cr)
                 while crcl > 34:
                     crcl = u.calculateCrCl(patient['height'], patient['weight'], patient['age'], gender, cr)
                     cr += 1
                 patient['cr'] = cr
             else: # Assign normal ageing creatinine
-                patient['cr'] = round(np.random.choice(cr_dist_m[index], 1)[0]) if gender == 'm' else round(np.random.choice(cr_dist_f[index], 1)[0])
+                patient['cr'] = round(rng.choice(cr_dist_m[index], 1)[0]) if gender == 'm' else round(rng.choice(cr_dist_f[index], 1)[0])
 
-            prescriber = Prescriber(patient, do_not_write_to_db=True if env == "HPC" else False, write_to_csv=True if env == "HPC" else False)
+            prescriber = Prescriber(patient, rng, do_not_write_to_db=True if env == "HPC" else False, write_to_csv=True if env == "HPC" else False)
             medications = prescriber.prescribe()
 
             patient['polypharmacy'] = 1 if medications >= 5 else 0

@@ -14,6 +14,9 @@ test_utils:
 test_pgm:
 	PYTHONPATH=. pytest -v tests/test_pgm.py::TestPGM --ignore=lib/ --capture=tee-sys
 
+test_pgm_specific:
+	PYTHONPATH=. pytest -v tests/test_pgm.py::TestPGM::test_infer_anaemia --ignore=lib/ --capture=tee-sys
+
 test_prescribing:
 	PYTHONPATH=. pytest -v tests/test_prescribing.py::TestPrescribing --ignore=lib/ --capture=tee-sys
 
@@ -22,6 +25,9 @@ test_MPI:
 
 test_oracles:
 	PYTHONPATH=. pytest -v tests/test_oracles.py::TestOracles --ignore=lib/ --capture=tee-sys
+
+test_labs:
+	PYTHONPATH=. pytest -v tests/test_labs.py::TestLabs --ignore=lib/ --capture=tee-sys
 
 run:
 	python run.py

@@ -1,0 +1,122 @@
+---
+hb:
+  m:
+    ll: 130
+    ul: 180
+  f:
+    ll: 115
+    ul: 165
+  units: g/l
+  full: Haemoglobin
+wbc:
+  m: 
+    ll: 4
+    ul: 11
+  f:
+    ll: 4
+    ul: 11
+  units: x 10^9/l
+  full: White blood cells
+plt:
+  m:
+    ll: 150
+    ul: 450
+  f:
+    ll: 150
+    ul: 450
+  units: x 10^9/l
+  full: Platelets
+rbc:
+  m: 
+    ll: 4.3
+    ul: 5.8
+  f: 
+    ll: 3.9
+    ul: 5.4
+  units: x 10^12/l
+  full: Red blood cells
+mcv:
+  m: 
+    ll: 80
+    ul: 100
+  f: 
+    ll: 80
+    ul: 100
+  units: fl
+  full: Mean cell volume
+hct:
+  m:
+    ll: 0.39
+    ul: 0.5
+  f: 
+    ll: 0.36
+    ul: 0.47
+  units: pg
+  full: Haematocrit
+mch:
+  m:
+    ll: 27
+    ul: 32
+  f: 
+    ll: 27
+    ul: 32
+  units: pg
+  full: Mean cell haemoglobin
+mchc:
+  m:
+    ll: 300
+    ul: 360
+  f: 
+    ll: 300
+    ul: 360
+  units: g/l
+  full: Mean cell haemoglobin concentration
+neut:
+  m:
+    ll: 2
+    ul: 8
+  f: 
+    ll: 2
+    ul: 8
+  units: x10^9/l
+  full: Neutrophils
+lymph:
+  m:
+    ll: .5
+    ul: 4
+  f: 
+    ll: .5
+    ul: 4
+  units: x10^9/l
+  full: Lymphocytes
+mono:
+  m:
+    ll: .2
+    ul: 1.2
+  f: 
+    ll: .2
+    ul: 1.2
+  units: x10^9/l
+  full: Monocytes
+eos:
+  m:
+    ll: .1
+    ul: .5
+  f: 
+    ll: .1
+    ul: .5
+  units: x10^9/l
+  full: Eosinophils
+baso:
+  m:
+    ll: .0
+    ul: .1
+  f: 
+    ll: .0
+    ul: .1
+  units: x10^9/l
+  full: Basophils
+
+
+
+  

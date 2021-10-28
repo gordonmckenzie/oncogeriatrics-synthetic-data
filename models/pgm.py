@@ -9,8 +9,8 @@ from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
 
 class PGM:
-    def __init__(self):
-        self.rng = np.random.default_rng()
+    def __init__(self, rng):
+        self.rng: np.random = rng
 
     # Return Yes or No for PGM inference
     def inferenceResult(self, p):
@@ -138,7 +138,7 @@ class PGM:
         # bg_risk = 0.14
         # approach = "WEIGHTED" # MAX_RISK
 
-        bg_risk = (band['geriatricVulnerabilities']['ckd'][gender] / 100) - 0.14
+        bg_risk = (band['geriatricVulnerabilities']['ckd'][gender] / 100) #- 0.14
 
         variables = [{'name': 'Diabetes', 'r': 3.09, 'll': 1.73, 'ul': 4.93, 'ciType': 95, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/27477292/'}, {'name': 'Obesity', 'r': 1.81, 'll': 1.52, 'ul': 2.16, 'ciType': 95, 'type': 'OR', 'ref': '#https://files.digital.nhs.uk/72/0EDBA2/HSE17-Adult-Child-BMI-tab-v2.xlsx, https://pubmed.ncbi.nlm.nih.gov/33656052/'}, {'name': 'Hypertension', 'r': 1.81, 'll': 1.39, 'ul': 2.6, 'ciType': 95, 'type': 'RR', 'ref': 'https://pubmed.ncbi.nlm.nih.gov/33238919/, https://pubmed.ncbi.nlm.nih.gov/27383068, https://bjgp.org/content/70/693/e285'}]
 
@@ -189,7 +189,7 @@ class PGM:
     def inferCOPD(self, band, gender, s, a):
         copd = BayesianModel([('Past smoking', 'COPD'), ('Current smoking', 'COPD'), ('Asthma', 'COPD')])
 
-        bg_risk = (band['geriatricVulnerabilities']['copd'][gender] / 100) - 10.7
+        bg_risk = (band['geriatricVulnerabilities']['copd'][gender] / 100)
 
         variables = [{'name': 'Past smoking', 'r': 2.89, 'll': 2.63, 'ul': 3.17, 'type': 'RR', 'ref': 'https://bmcpulmmed.biomedcentral.com/articles/10.1186/1471-2466-11-36'}, {'name': 'Current smoking', 'r': 3.51, 'll': 3.08, 'ul': 3.99, 'type': 'RR', 'ref': 'https://bmcpulmmed.biomedcentral.com/articles/10.1186/1471-2466-11-36'}, {'name': 'Asthma', 'r': 2.23, 'll': 1.36, 'ul': 3.66, 'type': 'OR', 'ref': 'https://thorax.bmj.com/content/70/9/822'}]
 
@@ -2373,7 +2373,7 @@ class PGM:
 
         cpd_b = TabularCPD(variable='Diabetes', variable_card=2,
                                 values=[[0],[1]],
-                                state_names={'Diabetes': ['Yes', 'No']})
+                                state_nfames={'Diabetes': ['Yes', 'No']})
 
         cpd__a = TabularCPD(variable='Neutropaenic events', variable_card=2,
                         values=values,

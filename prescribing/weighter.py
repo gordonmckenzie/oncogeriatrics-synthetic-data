@@ -1,6 +1,6 @@
 import numpy as np
 
-arr = np.array([39.6,41.8,11.9,6.7])
+arr = np.array([31.5,9,1.3])
 
 arr_sum = 1 / np.sum(arr)
 

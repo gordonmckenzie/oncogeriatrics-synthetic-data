@@ -1,7 +1,16 @@
 from models.pgm import PGM
-pgm = PGM()
+pgm: PGM = PGM()
 
 class TestPGM():
+
+    def test_infer_anaemia(self):
+        result = pgm.inferAnaemia({'geriatricVulnerabilities': {'anaemia': {'f': 3.8, 'm': 4.1}}}, 'f', pgm.inferenceResult(1))
+
+        result = round(result, 2)
+
+        print(result)
+
+        assert result == 0 or result == 1
 
     def test_infer_decreased_social_activity(self):
         result = pgm.inferDecreasedSocialActivity(

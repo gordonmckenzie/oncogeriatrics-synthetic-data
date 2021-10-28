@@ -14,7 +14,7 @@ variables = [
 bg_risk = 0.14
 approach = "WEIGHTED" # MAX_RISK
 
-i = 0 
+i = 0
  
 table = []
 labels = []
