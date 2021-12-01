@@ -2373,7 +2373,7 @@ class PGM:
 
         cpd_b = TabularCPD(variable='Diabetes', variable_card=2,
                                 values=[[0],[1]],
-                                state_nfames={'Diabetes': ['Yes', 'No']})
+                                state_names={'Diabetes': ['Yes', 'No']})
 
         cpd__a = TabularCPD(variable='Neutropaenic events', variable_card=2,
                         values=values,
