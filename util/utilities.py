@@ -363,7 +363,7 @@ class Utilities:
         elif score >= 12 and score < 20:
             risk = 89
 
-        present = 1 if risk/100 >= 0.5 else 0
+        present = 1 if self.rng.random() > risk/100 else 0
         
         return risk/100, score, present
 
