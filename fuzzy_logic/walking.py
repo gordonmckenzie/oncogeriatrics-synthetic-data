@@ -82,4 +82,4 @@ class FuzzyWalking():
             f.write(f"Results that made Sugeno 0 for walking.py CVDs:{_cvds},  Resp:{_resp}, Cognitive{_cog}, MSK: {_msk}\n\n")
             f.close()
 
-        return 1 if self.rng.random() > infer/100 else 0
+        return 1 if self.rng.random() < infer/100 else 0
