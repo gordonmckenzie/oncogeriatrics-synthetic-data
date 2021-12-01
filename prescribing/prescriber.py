@@ -21,9 +21,10 @@ class Prescriber():
         return flattened_list
 
     def store_as_csv(self, id, agent, reason):
-        with open(f'results/data/prescribing.csv', 'a', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            csv_writer.writerow([id, agent, reason])
+        return True
+        # with open(f'results/data/prescribing.csv', 'a', newline='') as csvfile:
+        #     csv_writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        #     csv_writer.writerow([id, agent, reason])
 
     def store(self, agent: str, reason: str, potential_duplicates: list, egfr=None):
         # First check not duplicated 

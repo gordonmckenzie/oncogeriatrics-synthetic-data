@@ -129,7 +129,7 @@ class PGM:
         infer = VariableElimination(anaemia)
         q = infer.query(['Anaemia'], evidence={'Chronic kidney disease': c}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferCKD(self, band, gender, h, o, d):
         # a,b,c,d etc.
@@ -184,7 +184,7 @@ class PGM:
         infer = VariableElimination(ckd)
         q = infer.query(['CKD'], evidence={'Hypertension': h, 'Obesity': o, 'Diabetes': d}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferCOPD(self, band, gender, s, a):
         copd = BayesianModel([('Past smoking', 'COPD'), ('Current smoking', 'COPD'), ('Asthma', 'COPD')])
@@ -229,7 +229,7 @@ class PGM:
         infer = VariableElimination(copd)
         q = infer.query(['COPD'], evidence={'Past smoking': 'Yes' if s == 1 else 'No', 'Current smoking': 'Yes' if s == 0 else 'No', 'Asthma': a}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferDizziness(self, band, gender, o):
         dizziness = BayesianModel([('Female', 'Dizziness'), ('Osteoporosis', 'Dizziness')])
@@ -269,7 +269,7 @@ class PGM:
         infer = VariableElimination(dizziness)
         q = infer.query(['Dizziness'], evidence={'Female': 'Yes' if gender == 'f' else 'No', 'Osteoporosis': o}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferFaecalIncontinence(self, band, gender, ui, d, h):
         faecal_incontinence = BayesianModel([('Urinary incontinence', 'Faecal incontinence'), ('Diabetes', 'Faecal incontinence'), ('Hypertension', 'Faecal incontinence')])
@@ -314,7 +314,7 @@ class PGM:
         infer = VariableElimination(faecal_incontinence)
         q = infer.query(['Faecal incontinence'], evidence={'Urinary incontinence': ui, 'Diabetes': d, 'Hypertension': h}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferFootProblems(self, band, gender):
         foot_problems = BayesianModel([('Female', 'Foot problems')])
@@ -350,7 +350,7 @@ class PGM:
         infer = VariableElimination(foot_problems)
         q = infer.query(['Foot problems'], evidence={'Female': 'Yes' if gender == 'f' else 'No'}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferLiverDisease(self, band, gender, o, a):
         liver_disease = BayesianModel([('Male', 'Liver disease'), ('Obese', 'Liver disease'), ('Alcohol use disorder', 'Liver disease')])
@@ -398,7 +398,7 @@ class PGM:
         infer = VariableElimination(liver_disease)
         q = infer.query(['Liver disease'], evidence={'Male': 'Yes' if gender == 'm' else 'No', 'Obese': o, 'Alcohol use disorder': a}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferUlcers(self, band, gender, ui):
         ulcers = BayesianModel([('Urinary incontinence', 'Ulcers')])
@@ -433,7 +433,7 @@ class PGM:
         infer = VariableElimination(ulcers)
         q = infer.query(['Ulcers'], evidence={'Urinary incontinence': ui}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferOrthostaticHypotension(self, band, gender, dm, h, p, d):
         orthostatic_hypotension = BayesianModel([('Diabetes', 'Orthostatic hypotension'), ('Hypertension', 'Orthostatic hypotension'), ('Parkinsons disease', 'Orthostatic hypotension'), ('Dementia', 'Orthostatic hypotension')])
@@ -485,7 +485,7 @@ class PGM:
         infer = VariableElimination(orthostatic_hypotension)
         q = infer.query(['Orthostatic hypotension'], evidence={'Diabetes': dm, 'Hypertension': h, 'Parkinsons disease': p, 'Dementia': d}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
     
     def inferHeartFailure(self, band, gender, o, h, d, s, m, a):
         heart_failure = BayesianModel([('Male', 'Heart failure'), ('Obesity', 'Heart failure'), ('Hypertension', 'Heart failure'), ('Diabetes', 'Heart failure'), ('Current smoker', 'Heart failure'), ('Myocardial infarction', 'Heart failure'), ('Atrial fibrillation', 'Heart failure')])
@@ -555,7 +555,7 @@ class PGM:
         infer = VariableElimination(heart_failure)
         q = infer.query(['Heart failure'], evidence={'Male': 'Yes' if gender == 1 else 'No', 'Obesity': o, 'Hypertension': h, 'Diabetes': d, 'Current smoker': s, 'Myocardial infarction': m, 'Atrial fibrillation': a }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferFrailty(self, band, gender, hl, dm, visual, comorb, cv, copd):
         frailty = BayesianModel([('Hearing loss', 'Frailty'), ('Diabetes', 'Frailty'), ('Visual impairment', 'Frailty'), ('Comorbidity >= 3', 'Frailty'), ('Cardiovascular disease', 'Frailty'), ('COPD', 'Frailty')])
@@ -619,7 +619,7 @@ class PGM:
         infer = VariableElimination(frailty)
         q = infer.query(['Frailty'], evidence={'Hearing loss': hl, 'Diabetes': dm, 'Visual impairment': visual, 'Comorbidity >= 3': comorb, 'Cardiovascular disease': cv, 'COPD': copd }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferBadlDisability(self, band, gender, dm, bmi1, bmi2, f):
         badl_disability = BayesianModel([('Diabetes', 'BADL disability'), ('BMI > 30 < 35', 'BADL disability'), ('BMI >= 35.0 < 40', 'BADL disability'), ('Frailty', 'BADL disability')])
@@ -672,7 +672,7 @@ class PGM:
         infer = VariableElimination(badl_disability)
         q = infer.query(['BADL disability'], evidence={'Diabetes': dm, 'BMI > 30 < 35': bmi1, 'BMI >= 35.0 < 40': bmi2, 'Frailty': f}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferDepression(self, band, gender, fr, oa, badl, pd, hf):
 
@@ -726,7 +726,7 @@ class PGM:
         infer = VariableElimination(depression)
         q = infer.query(['Depression'], evidence={'Frailty': fr, 'Osteoarthritis': oa, 'BADL Dependency': badl, 'Parkinsons disease': pd, 'Heart failure': hf}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferAlcoholUseDisorder(self, band, gender, depression):
         alcohol_use_disorder = BayesianModel([('Depression', 'Alcohol use disorder')])
@@ -758,7 +758,7 @@ class PGM:
         infer = VariableElimination(alcohol_use_disorder)
         q = infer.query(['Alcohol use disorder'], evidence={'Depression': depression}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferSleepDisturbance(self, band, gender, dep, htn, hd, dm, pu, asthma, copd):
 
@@ -830,7 +830,7 @@ class PGM:
         infer = VariableElimination(sleep_disturbance)
         q = infer.query(['Sleep disturbance'], evidence={'Depression': dep, 'Hypertension': htn, 'Heart disease': hd, 'Diabetes': dm, 'Peptic ulcer': pu, 'Asthma': asthma, 'COPD': copd }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferSyncope(self, band, gender, cva, tia, htn):
 
@@ -878,7 +878,7 @@ class PGM:
         infer = VariableElimination(syncope)
         q = infer.query(['Syncope'], evidence={'Stroke': cva, 'TIA': tia, 'Hypertension': htn}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferIadlDisability(self, band, gender, f, dm, sleep):
 
@@ -925,7 +925,7 @@ class PGM:
         infer = VariableElimination(iadl_dependency)
         q = infer.query(['IADL dependency'], evidence={'Frailty': f, 'Diabetes': dm, 'Sleep disturbance': sleep}, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferPVD(self, band, gender, dm, smoking, htn, mi, angina, hf, cva, tia):
 
@@ -1009,7 +1009,7 @@ class PGM:
                 'TIA': tia
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferFalls(self, band, gender, dw, diz, pd, oa, ui, oh, af, dep, fp):
         fall = BayesianModel([('Difficulty walking', 'Fall'), ('Dizziness', 'Fall'), ("Parkinsons disease", 'Fall'), ('Osteoarthritis', 'Fall'), ('Urinary incontinence', 'Fall'), ('Orthostatic hypotension', 'Fall'), ('Atrial fibrillation', 'Fall'), ('Depression', 'Fall'), ('Foot problems', 'Fall')])
@@ -1102,7 +1102,7 @@ class PGM:
                 'Foot problems': fp
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferSocialIsolation(self, band, gender, hl, falls, walking, badl):
 
@@ -1161,7 +1161,7 @@ class PGM:
                 'BADL dependency': badl
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferHomebound(self, band, gender, dep, isol, aid, falls, fof, pain):
         homebound = BayesianModel([('Depression', 'Homebound'), ('Social isolation', 'Homebound'), ('Using walking aid', 'Homebound'), ('Falls', 'Homebound'), ('Fear of falling', 'Homebound'), ('Chronic pain', 'Homebound')])
@@ -1233,7 +1233,7 @@ class PGM:
             'Chronic pain': pain,
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
 
     def inferMalnutrition(self, band, gender, pd, badl, mci, dementia):
@@ -1392,7 +1392,7 @@ class PGM:
             'Diabetes': dm
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferHistoryOfDelirium(self, band, gender, dementia, vi):
 
@@ -1433,7 +1433,7 @@ class PGM:
             'Visual impairment': vi
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferFragilityFracture(self, band, gender, weight, bmi1, bmi2, wl, currentSmoker, ra):
         fragility_fracture = BayesianModel([('Weight <58kg', 'Fragility fracture'), ('Underweight', 'Fragility fracture'), ('Obese', 'Fragility fracture'), ('Weight loss', 'Fragility fracture'), ('Current smoker', 'Fragility fracture'), ('Rheumatoid arthritis', 'Fragility fracture')])
@@ -1499,7 +1499,7 @@ class PGM:
             'Rheumatoid arthritis': ra
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
     def inferDecreasedSocialActivity(self, band, gender, age, major_health_conditions, depression, cognitive, adls):
         
@@ -1582,7 +1582,7 @@ class PGM:
             'Activity_2': 'Yes' if adls == 2 else 'No'
             }, show_progress=False)
 
-        return 1 if self.rng.random() < q.values[0] else 0
+        return 1 if q.values[0] >= 0.5 else 0
 
 ######------OUTCOMES--------######
 

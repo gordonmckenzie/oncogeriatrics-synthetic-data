@@ -138,3 +138,11 @@ dmypy.json
 results/
 issues/
 experimental/
+catboost_info/
+analysis/
+cancer/
+elsa/
+laboratory/
+markov_chains/
+organs/
+snowmed/

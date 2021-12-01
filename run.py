@@ -752,9 +752,9 @@ def generateSample(env: str) -> list:
             patient['10_year_mortality_risk'], patient['10_year_mortality_excess_present'] = u.calculateSuemoto(
                gender, 
                patient['age'],
-               1 if patient['t1dm'] == 1 or patient['t2dm'] == 1 else 0,
-               1 if patient['angina'] == 1 or patient['mi'] == 1 or patient['af'] == 1 or patient['heartFailure'] == 1 or patient['heartValveDisease'] == 1 else 0,
-               1 if patient['copd'] == 1 or patient['asthma'] == 1 else 0,
+               1 if (patient['t1dm'] == 1 or patient['t2dm'] == 1) else 0,
+               1 if (patient['angina'] == 1 or patient['mi'] == 1 or patient['af'] == 1 or patient['heartFailure'] == 1 or patient['heartValveDisease'] == 1) else 0,
+               1 if (patient['copd'] == 1 or patient['asthma'] == 1) else 0,
                0,
                1 if patient['smoking'] == 0 else 0,
                1 if patient['smoking'] == 1 else 0,

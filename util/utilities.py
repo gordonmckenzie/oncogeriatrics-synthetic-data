@@ -164,8 +164,9 @@ class Utilities:
             for v in variables:
                 wts.append(transformRisk(v))
             weights = np.array(wts)
-            (weights - weights.min()) / (weights.max() - weights.min())
-            return (weights / weights.sum())
+            # (weights - weights.min()) / (weights.max() - weights.min())
+            # return (weights / weights.sum())
+            return weights
 
         for row in itertools.product([0, 1], repeat = len(variables)):
             table.append(row)
@@ -362,7 +363,7 @@ class Utilities:
         elif score >= 12 and score < 20:
             risk = 89
 
-        present = 1 if self.rng.random() < risk/100 else 0
+        present = 1 if risk/100 >= 0.5 else 0
         
         return risk/100, score, present
 
@@ -481,7 +482,7 @@ class Utilities:
 
         risk = (math.exp(x) / (1 + math.exp(x)))
 
-        present = 1 if self.rng.random() < risk else 0 
+        present = 1 if risk >= 0.5 else 0 
 
         return risk, present
 
@@ -521,7 +522,7 @@ class Utilities:
 
         thirty_day = math.exp((-7.366 + risk_score)) / (1 + math.exp((-7.366 + risk_score)))
 
-        present = 1 if self.rng.random() < thirty_day else 0 
+        present = 1 if thirty_day >= 0.5 else 0 
 
         return thirty_day, present
 
