@@ -42,5 +42,5 @@ pretty-outcome-strings: {'pod_present': 'Postoperative delirium', 'all_surgical_
 ###----Endpoints------------------------###
 surgery: ['post_op_30_day_major_mortality_present', 'post_op_30_day_minor_mortality_present', 'post_op_mace_present', 'post_op_itu_admission_present', 'post_op_neuro_comps_present', 'post_op_pulmonary_comps_present', 'post_op_sepsis_present', 'wound_complications_present', 'increased_los_present']
 chemotherapy: ['neutropaenic_events_present', 'chemotherapy_toxicity_present']
-general: ['post_op_30_day_major_mortality_present', 'post_op_30_day_minor_mortality_present', 'post_op_mace_present', 'post_op_itu_admission_present', 'post_op_neuro_comps_present', 'chemotherapy_toxicity_present', 'functional_decline_present']
-oncogeriatric-input: ['functional_decline_present', 'post_op_mace_present', 'post_op_itu_admission_present', 'post_op_neuro_comps_present', 'pod_present', 'increased_los_present', 'chemotherapy_toxicity_present']
+general: ['post_op_30_day_major_mortality_present', 'post_op_30_day_minor_mortality_present', 'post_op_mace_present', 'post_op_itu_admission_present', 'post_op_neuro_comps_present', 'chemotherapy_toxicity_present']
+oncogeriatric-input: ['functional_decline_present', 'post_op_mace_present', 'post_op_itu_admission_present', 'post_op_neuro_comps_present', 'pod_present', 'increased_los_present']
