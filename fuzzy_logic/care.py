@@ -66,4 +66,4 @@ class FuzzyCare():
             f.write(f"Results that made Sugeno 0 for care.py Age:{_age},  Disability:{_disability}, Alone:{_alone}\n\n")
             f.close()
 
-        return 1 if infer/100 >= 0.5 else 0
+        return 1 if self.rng.random() > infer/100  else 0
