@@ -22,7 +22,7 @@ else:
     df = pd.DataFrame(arr)
     date = time.strftime("%d-%m-%Y-%H-%M-%S")
     df.to_csv(f'results/data/{date}.csv', index=False)
-    os.rename('results/data/prescribing.csv', f'results/data/prescribing-{date}.csv')
+    #os.rename('results/data/prescribing.csv', f'results/data/prescribing-{date}.csv')
     analysis = Analysis(arr)
     filename = f"results/reports/{date}.docx"
     generateReport(analysis, filename)
