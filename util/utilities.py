@@ -363,7 +363,7 @@ class Utilities:
         elif score >= 12 and score < 20:
             risk = 89
 
-        present = 1 if self.rng.random() > risk/100 else 0
+        present = 1 if risk/100 >= 0.5 else 0
         
         return risk/100, score, present
 
@@ -482,12 +482,12 @@ class Utilities:
 
         risk = (math.exp(x) / (1 + math.exp(x)))
 
-        present = 1 if self.rng.random() < risk else 0 
+        present = 1 if risk >= 0.021 else 0 
 
         return risk, present
 
     # Calculate NCEPOD SORT score for 30-day postoperative mortality
-    def calculateSort(self, p, type):
+    def calculateSort(self, p, _type):
 
         asaThree = 0
         asaFour = 0
@@ -515,14 +515,14 @@ class Utilities:
             age_65_75 = 0
             age_80 = 1
 
-        if type == 'major':
+        if _type == 'major':
             xMajor = 1
 
         risk_score = (asaThree * 1.411) + (asaFour * 2.388) + (asaFive * 4.081) + (urgencyExpedited * 1.236) + (highRiskSpecialty * 0.712) + (xMajor * 0.381) + (cancer * 0.667) + (age_65_75 * 0.777) + (age_80 * 1.591)
 
         thirty_day = math.exp((-7.366 + risk_score)) / (1 + math.exp((-7.366 + risk_score)))
 
-        present = 1 if self.rng.random() < thirty_day else 0 
+        present = 1 if thirty_day >= (0.095 if _type == 'major' else 0.019) else 0 
 
         return thirty_day, present
 

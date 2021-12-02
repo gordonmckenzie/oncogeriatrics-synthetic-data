@@ -1732,7 +1732,7 @@ class PGM:
             'Visual impairment': vi
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0  
+        return q.values[0], 1 if q.values[0] >= 0.249 else 0  
 
     def inferAllSurgicalComplications(self, frailty, depression, polypharmacy, currentSmoker, aud):   
 
@@ -1797,7 +1797,7 @@ class PGM:
             'AUD': aud,
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0        
+        return q.values[0], 1 if q.values[0] >= 0.314 else 0        
 
     def inferPostOperativePain(self, depression, currentSmoker):
 
@@ -1892,7 +1892,7 @@ class PGM:
             'AUD': aud,
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0
+        return q.values[0], 1 if q.values[0] >= 0.083 else 0
 
     def inferPostOpSepsis(self, currentSmoker, frailty, aud, ccf, dm, ckd):
 
@@ -1964,7 +1964,7 @@ class PGM:
             'CKD': ckd,
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0               
+        return q.values[0], 1 if q.values[0] >= 0.063 else 0               
 
 
     def inferPostOpPulmComps(self, currentSmoker, frailty, aud, ccf):
@@ -2023,7 +2023,7 @@ class PGM:
             'Heart failure': ccf
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0
+        return q.values[0], 1 if q.values[0] >= 0.226 else 0
 
 
     def inferPostOpNeuroComps(self, currentSmoker, frailty):
@@ -2068,7 +2068,7 @@ class PGM:
             'Frailty': frailty
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0 
+        return q.values[0], 1 if q.values[0] > 0.025 else 0 
 
     def inferSurviveCPR(self, age, badl, ckd):
 
@@ -2205,7 +2205,7 @@ class PGM:
             'ASA4': 'Yes' if asa == 4 else 'No'
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0 
+        return q.values[0], 1 if q.values[0] >= 0.005 else 0 
 
     def inferPIMs(self, dm, poly):    
 
@@ -2314,7 +2314,7 @@ class PGM:
             'ASA4': 'Yes' if asa == 4 else 'No'
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0 
+        return q.values[0], 1 if q.values[0] >= 0.413 else 0 
 
     def inferFunctionalDecline(self, iadl):
 
@@ -2352,7 +2352,7 @@ class PGM:
             'IADL impairment': iadl
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0 
+        return q.values[0], 1 if q.values[0] >= 0.306 else 0 
 
     def inferNeutropaenicEvents(self, comorbidity, dm):
 
@@ -2396,7 +2396,7 @@ class PGM:
             'Diabetes': dm
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0
+        return q.values[0], 1 if q.values[0] >= 0.147 else 0
 
     def inferNursingHomeAdmission(self, currentSmoker, frailty, badl, difficultyWalkingOutside):
 
@@ -2454,5 +2454,5 @@ class PGM:
             'Difficulty walking outside': difficultyWalkingOutside
             }, show_progress=False)
 
-        return q.values[0], 1 if self.rng.random() < q.values[0] else 0
+        return q.values[0], 1 if q.values[0] >= 0.106 else 0
 
