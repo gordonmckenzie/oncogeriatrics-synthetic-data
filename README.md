@@ -1,5 +1,3 @@
-# https://amses-journal.springeropen.com/articles/10.1186/s40323-020-00147-4#Sec3
-
 # A synthetic data generator for oncogeriatrics
 
 ## Summary
